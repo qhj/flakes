@@ -163,6 +163,7 @@
     fantasque-sans-mono
     telegram-desktop
     wl-clipboard
+    waydroid-script
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -185,5 +186,6 @@
       intel-media-driver
     ];
   };
+  virtualisation.waydroid.enable = true;
 }
 
