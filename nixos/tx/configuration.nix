@@ -2,11 +2,10 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
+  imports = [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -38,7 +37,7 @@
   services.xserver.enable = true;
 
 
-  
+
 
   # Configure keymap in X11
   # services.xserver.xkb.layout = "us";
@@ -164,6 +163,7 @@
     telegram-desktop
     wl-clipboard
     waydroid-script
+    chromium
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -187,5 +187,6 @@
     ];
   };
   virtualisation.waydroid.enable = true;
+  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  nixpkgs.config.chromium.commandLineArgs = "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo";
 }
-
