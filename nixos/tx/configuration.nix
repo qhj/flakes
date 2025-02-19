@@ -190,4 +190,5 @@
   virtualisation.waydroid.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo";
+  services.fprintd.enable = true;
 }
