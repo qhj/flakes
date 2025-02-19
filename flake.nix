@@ -6,8 +6,19 @@
   };
 
   outputs = { self, nixpkgs }: let
-    inherit (self) outputs;
+    system = "x86_64-linux";
   in {
+    devShells."${system}".default = let
+      pkgs = nixpkgs.legacyPackages."${system}";
+    in pkgs.mkShell {
+      packages = with pkgs; [
+        fish
+        nixd
+      ];
+      shellHook = ''
+        exec fish
+      '';
+    };
     overlays.default =
       final: prev:
       prev.lib.packagesFromDirectoryRecursive {
@@ -18,7 +29,7 @@
       tx = nixpkgs.lib.nixosSystem {
         modules = [
           ./nixos/tx/configuration.nix
-	  { nixpkgs.overlays = [ self.overlays.default ]; }
+          { nixpkgs.overlays = [ self.overlays.default ]; }
         ];
       };
     };

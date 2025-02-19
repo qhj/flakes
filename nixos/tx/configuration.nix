@@ -164,6 +164,7 @@
     wl-clipboard
     waydroid-script
     chromium
+    zed-editor
   ];
   fonts.fontconfig = {
     defaultFonts = {
