@@ -121,6 +121,9 @@
   time.timeZone = "Asia/Shanghai";
   programs.fish = {
     enable = true;
+    interactiveShellInit = ''
+      set fish_greeting
+    '';
   };
   programs.firefox.enable = true;
   users = {
@@ -150,7 +153,7 @@
   };
   environment.systemPackages = with pkgs; [
     neovim
-    fastfetch
+    #fastfetch
     file
     tree
     git
@@ -190,4 +193,9 @@
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo";
   services.fprintd.enable = true;
+
+  environment.shellAliases = with pkgs; {
+    ff = "${fastfetch}/bin/fastfetch";
+    zed = "${zed-editor}/bin/zeditor";
+  };
 }
