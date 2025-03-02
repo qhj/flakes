@@ -2,7 +2,13 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  pkgs-stable,
+  ...
+}:
 
 {
   imports = [
@@ -131,7 +137,10 @@
     users.qhj = {
       isNormalUser = true;
       group = "qhj";
-      extraGroups = [ "wheel" ];
+      extraGroups = [
+        "wheel"
+        (lib.mkIf config.virtualisation.libvirtd.enable "libvirtd")
+      ];
       shell = pkgs.fish;
     };
   };
@@ -166,6 +175,9 @@
     waydroid-script
     chromium
     zed-editor
+    moonlight-qt
+    chiaki-ng
+    looking-glass-client
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -198,4 +210,61 @@
     ff = "${fastfetch}/bin/fastfetch";
     zed = "${zed-editor}/bin/zeditor";
   };
+
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      package = pkgs-stable.libvirt;
+      qemu = {
+        package = pkgs.qemu_kvm;
+        swtpm.enable = true;
+        ovmf = {
+          enable = true;
+          packages = [ pkgs.OVMFFull.fd ];
+        };
+        verbatimConfig = ''
+          cgroup_device_acl = [
+            "/dev/null", "/dev/full", "/dev/zero",
+            "/dev/random", "/dev/urandom",
+            "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+            "/dev/rtc","/dev/hpet", "/dev/vfio/vfio",
+            "/dev/kvmfr0"
+          ]
+        '';
+      };
+    };
+  };
+  programs.virt-manager.enable = true;
+
+  boot = {
+    kernelParams = [
+      "intel_iommu=on"
+      "vfio-pci.ids=8086:56a0,8086:4f90"
+    ];
+    extraModulePackages = with config.boot.kernelPackages; [ kvmfr ];
+    kernelModules = [
+      "vfio_pci"
+      "vfio"
+      "vfio_iommu_type1"
+      "kvmfr"
+    ];
+    extraModprobeConfig = ''
+      options kvmfr static_size_mb=256
+    '';
+    postBootCommands = ''
+      DEV="0000:08:00.0"
+      echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
+      modprobe -i vfio-pci
+    '';
+  };
+  networking.bridges.br0.interfaces = [ "enp9s0" ];
+  networking.interfaces.br0.useDHCP = true;
+
+  services.udev.extraRules = ''
+    SUBSYSTEM=="kvmfr", OWNER="qhj", GROUP="libvirtd", MODE="0660"
+  '';
+  environment.etc."looking-glass-client.ini".text = ''
+    [app]
+    shmFile=/dev/kvmfr0
+  '';
 }

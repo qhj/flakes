@@ -3,10 +3,16 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "nixpkgs/nixos-24.11";
   };
 
   outputs =
-    { self, nixpkgs }:
+    {
+
+      self,
+      nixpkgs,
+      nixpkgs-stable,
+    }:
     let
       system = "x86_64-linux";
     in
@@ -25,17 +31,21 @@
             exec fish
           '';
         };
-      overlays.default =
-        final: prev:
-        prev.lib.packagesFromDirectoryRecursive {
-          inherit (prev) callPackage;
-          directory = ./pkgs;
-        };
+      overlays = import ./overlays;
       nixosConfigurations = {
         tx = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            pkgs-stable = import nixpkgs-stable {
+              inherit system;
+            };
+          };
           modules = [
             ./nixos/tx/configuration.nix
-            { nixpkgs.overlays = [ self.overlays.default ]; }
+            {
+              nixpkgs.overlays = with self.overlays; [
+                additions
+              ];
+            }
           ];
         };
       };
