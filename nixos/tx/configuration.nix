@@ -208,7 +208,7 @@
 
   environment.shellAliases = with pkgs; {
     ff = "${fastfetch}/bin/fastfetch";
-    zed = "${zed-editor}/bin/zeditor";
+    # zed = "${zed-editor}/bin/zeditor";
   };
 
   virtualisation = {
