@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-24.11";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v0.4.2";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -11,6 +15,7 @@
       self,
       nixpkgs,
       nixpkgs-stable,
+      lanzaboote,
     }:
     let
       system = "x86_64-linux";
@@ -91,6 +96,7 @@
                 additions
               ];
             }
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
       };
