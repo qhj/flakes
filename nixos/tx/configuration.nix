@@ -284,4 +284,6 @@
   '';
 
   swapDevices = [ { device = "/swap/swapfile"; } ];
+
+  boot.initrd.systemd.enable = true;
 }
