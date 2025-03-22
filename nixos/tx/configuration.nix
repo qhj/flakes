@@ -6,7 +6,6 @@
   pkgs,
   lib,
   config,
-  pkgs-stable,
   ...
 }:
 
@@ -161,7 +160,7 @@
     };
   };
   environment.systemPackages = with pkgs; [
-    neovim
+    helix
     #fastfetch
     file
     tree
@@ -174,7 +173,6 @@
     wl-clipboard
     waydroid-script
     chromium
-    zed-editor
     moonlight-qt
     chiaki-ng
     looking-glass-client
@@ -214,7 +212,6 @@
   virtualisation = {
     libvirtd = {
       enable = true;
-      package = pkgs-stable.libvirt;
       qemu = {
         package = pkgs.qemu_kvm;
         swtpm.enable = true;
