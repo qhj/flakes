@@ -282,4 +282,6 @@
     [app]
     shmFile=/dev/kvmfr0
   '';
+
+  swapDevices = [ { device = "/swap/swapfile"; } ];
 }
