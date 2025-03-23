@@ -193,6 +193,7 @@
   };
   hardware.bluetooth.enable = true;
   nix.settings.experimental-features = "nix-command flakes";
+  nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
