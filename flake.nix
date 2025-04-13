@@ -90,7 +90,7 @@
             };
           };
           modules = [
-            ./nixos/tx/configuration.nix
+            ./nixos/hosts/tx/configuration.nix
             {
               nixpkgs.overlays = with self.overlays; [
                 additions

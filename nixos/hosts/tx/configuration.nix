@@ -287,4 +287,7 @@
   swapDevices = [ { device = "/swap/swapfile"; } ];
 
   boot.initrd.systemd.enable = true;
+
+  services.udev.packages = with pkgs; [ canokeys-udev-rules ];
+  programs.ssh.startAgent = true;
 }
