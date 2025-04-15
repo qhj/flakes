@@ -289,5 +289,11 @@
   boot.initrd.systemd.enable = true;
 
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
-  programs.ssh.startAgent = true;
+  programs.ssh = {
+    startAgent = true;
+    extraConfig = ''
+      Host 192.168.77.1
+        ForwardAgent yes
+    '';
+  };
 }
