@@ -8,6 +8,14 @@
       url = "github:nix-community/lanzaboote/v0.4.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    secrets = {
+      url = "git+ssh://git@github.com/qhj/no-secrets-here.git?ref=main&shallow=1";
+      flake = false;
+    };
   };
 
   outputs =
@@ -16,8 +24,11 @@
       nixpkgs,
       nixpkgs-stable,
       lanzaboote,
-    }:
+      sops-nix,
+      ...
+    }@inputs:
     let
+      inherit (self) outputs;
       system = "x86_64-linux";
     in
     {
@@ -97,6 +108,13 @@
               ];
             }
             lanzaboote.nixosModules.lanzaboote
+          ];
+        };
+        gk41 = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            ./nixos/hosts/gk41/configuration.nix
+            sops-nix.nixosModules.sops
           ];
         };
       };

@@ -177,7 +177,9 @@
       "inputs": {
         "lanzaboote": "lanzaboote",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-stable": "nixpkgs-stable_2"
+        "nixpkgs-stable": "nixpkgs-stable_2",
+        "secrets": "secrets",
+        "sops-nix": "sops-nix"
       }
     },
     "rust-overlay": {
@@ -198,6 +200,44 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "secrets": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1745037009,
+        "narHash": "sha256-FxHa+Ci9EvI+TrLRSIxmqxGUtgadJsFD1opMTHjsSg4=",
+        "ref": "main",
+        "rev": "abaf42dd4d44d7cfc427342710de8e1054ed77ce",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/qhj/no-secrets-here.git"
+      },
+      "original": {
+        "ref": "main",
+        "shallow": true,
+        "type": "git",
+        "url": "ssh://git@github.com/qhj/no-secrets-here.git"
+      }
+    },
+    "sops-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1744669848,
+        "narHash": "sha256-pXyanHLUzLNd3MX9vsWG+6Z2hTU8niyphWstYEP3/GU=",
+        "owner": "Mic92",
+        "repo": "sops-nix",
+        "rev": "61154300d945f0b147b30d24ddcafa159148026a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mic92",
+        "repo": "sops-nix",
         "type": "github"
       }
     }
