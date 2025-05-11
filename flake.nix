@@ -117,6 +117,12 @@
             sops-nix.nixosModules.sops
           ];
         };
+        ser8 = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            ./nixos/hosts/ser8/configuration.nix
+          ];
+        };
       };
     };
 }
