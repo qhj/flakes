@@ -121,6 +121,12 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             ./nixos/hosts/ser8/configuration.nix
+            sops-nix.nixosModules.sops
+            {
+              nixpkgs.overlays = with self.overlays; [
+                additions
+              ];
+            }
           ];
         };
       };

@@ -2,13 +2,22 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
+
+let
+  secrets-path = builtins.toString inputs.secrets;
+  secrets = import inputs.secrets;
+in
+{
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -36,9 +45,6 @@
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-
-
-  
 
   # Configure keymap in X11
   # services.xserver.xkb.layout = "us";
@@ -158,6 +164,8 @@
     noto-fonts-cjk-serif
     noto-fonts-cjk-sans
     telegram-desktop
+    moonlight-qt
+    wl-clipboard
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -172,5 +180,77 @@
   hardware.bluetooth.enable = true;
   nix.settings.experimental-features = "nix-command flakes";
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
-}
+  sops = {
+    defaultSopsFile = "${secrets-path}/shared.yaml";
+    age.keyFile = "/var/lib/sops-nix/key.txt";
+  };
+  sops.secrets."dae/subscription" = {
+    mode = "0400";
+  };
+  sops.templates.dae-config = {
+    content = ''
+      global {
+        # Bind to LAN and/or WAN as you want. Replace the interface name to your own.
+        lan_interface: br0
+        wan_interface: auto # Use "auto" to auto detect WAN interface.
 
+        log_level: info
+        allow_insecure: false
+        auto_config_kernel_parameter: true
+      }
+
+      subscription {
+        "${config.sops.placeholder."dae/subscription"}"
+      }
+
+      # See https://github.com/daeuniverse/dae/blob/main/docs/en/configuration/dns.md for full examples.
+      dns {
+        upstream {
+          googledns: 'tcp+udp://dns.google:53'
+          alidns: 'udp://223.5.5.5:53'
+        }
+        routing {
+          request {
+            qtype(https) -> reject
+            fallback: alidns
+          }
+          response {
+            upstream(googledns) -> accept
+            ip(geoip:private) && !qname(geosite:cn) -> googledns
+            fallback: accept
+          }
+        }
+      }
+
+      group {
+        proxy {
+          #filter: name(keyword: HK, keyword: SG)
+          policy: min_moving_avg
+        }
+      }
+
+      # See https://github.com/daeuniverse/dae/blob/main/docs/en/configuration/routing.md for full examples.
+      routing {
+        pname(NetworkManager) -> direct
+        dip(224.0.0.0/3, 'ff00::/8') -> direct
+
+        ### Write your rules below.
+
+        # Disable h3 because it usually consumes too much cpu/mem resources.
+        l4proto(udp) && dport(443) -> block
+        dip(geoip:private) -> direct
+        dip(geoip:cn) -> direct
+        domain(geosite:cn) -> direct
+
+        fallback: proxy
+      }
+    '';
+    mode = "0400";
+  };
+  services.dae = {
+    enable = true;
+    configFile = config.sops.templates.dae-config.path;
+  };
+  services.udev.packages = with pkgs; [ canokeys-udev-rules ];
+  programs.ssh.startAgent = true;
+}
