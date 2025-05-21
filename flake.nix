@@ -62,6 +62,7 @@
         pkgs.mkShell {
           packages = with pkgs; [
             fish-wrapper
+            git
             nixd
             nixfmt-rfc-style
           ];
