@@ -132,6 +132,9 @@
     '';
   };
   programs.firefox.enable = true;
+  programs.firefox.preferences = {
+    "browser.tabs.inTitlebar" = 0;
+  };
   programs.adb.enable = true;
   users = {
     groups.qhj.gid = 1000;
