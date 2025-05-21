@@ -132,6 +132,7 @@
     '';
   };
   programs.firefox.enable = true;
+  programs.adb.enable = true;
   users = {
     groups.qhj.gid = 1000;
     users.qhj = {
@@ -139,6 +140,7 @@
       group = "qhj";
       extraGroups = [
         "wheel"
+        "adbusers"
         (lib.mkIf config.virtualisation.libvirtd.enable "libvirtd")
       ];
       shell = pkgs.fish;
