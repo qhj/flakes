@@ -11,7 +11,6 @@
 
 let
   secrets-path = builtins.toString inputs.secrets;
-  secrets = import inputs.secrets;
 in
 {
   imports = [
@@ -181,7 +180,7 @@ in
   nix.settings.experimental-features = "nix-command flakes";
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   sops = {
-    defaultSopsFile = "${secrets-path}/shared.yaml";
+    defaultSopsFile = "${secrets-path}/ser8.yaml";
     age.keyFile = "/var/lib/sops-nix/key.txt";
   };
   sops.secrets."dae/subscription" = {
