@@ -182,6 +182,7 @@ in
   environment.systemPackages = with pkgs; [
     helix
     fastfetch
+    wol
   ];
 
   sops = {
@@ -325,4 +326,5 @@ in
     rssh.enable = true;
     services.sudo.rssh = true;
   };
+  services.netbird.enable = true;
 }
