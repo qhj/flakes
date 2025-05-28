@@ -154,6 +154,12 @@
     pulse.enable = true;
   };
   services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.settings = {
+    Autologin = {
+      Session = "plasma.desktop";
+      User = "qhj";
+    };
+  };
   services.desktopManager.plasma6.enable = true;
   i18n.inputMethod = {
     enable = true;
@@ -309,5 +315,14 @@
       Host 192.168.77.1
         ForwardAgent yes
     '';
+  };
+  networking.interfaces.enp9s0.wakeOnLan = {
+    enable = true;
+  };
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    openFirewall = true;
+    capSysAdmin = true;
   };
 }
