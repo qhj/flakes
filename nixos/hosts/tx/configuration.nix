@@ -154,12 +154,12 @@
     pulse.enable = true;
   };
   services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.settings = {
-    Autologin = {
-      Session = "plasma.desktop";
-      User = "qhj";
-    };
-  };
+  # services.displayManager.sddm.settings = {
+  #   Autologin = {
+  #     Session = "plasma.desktop";
+  #     User = "qhj";
+  #   };
+  # };
   services.desktopManager.plasma6.enable = true;
   i18n.inputMethod = {
     enable = true;
@@ -187,7 +187,7 @@
     chromium
     moonlight-qt
     chiaki-ng
-    looking-glass-client
+    # looking-glass-client
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -232,33 +232,33 @@
           enable = true;
           packages = [ pkgs.OVMFFull.fd ];
         };
-        verbatimConfig = ''
-          cgroup_device_acl = [
-            "/dev/null", "/dev/full", "/dev/zero",
-            "/dev/random", "/dev/urandom",
-            "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-            "/dev/rtc","/dev/hpet", "/dev/vfio/vfio",
-            "/dev/kvmfr0"
-          ]
-        '';
+        # verbatimConfig = ''
+        #   cgroup_device_acl = [
+        #     "/dev/null", "/dev/full", "/dev/zero",
+        #     "/dev/random", "/dev/urandom",
+        #     "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+        #     "/dev/rtc","/dev/hpet", "/dev/vfio/vfio",
+        #     "/dev/kvmfr0"
+        #   ]
+        # '';
       };
-      hooks.qemu = {
-        isolcpus-hook = pkgs.writers.writeBash "isolcpus" ''
-          #!/bin/sh
+      # hooks.qemu = {
+      #   isolcpus-hook = pkgs.writers.writeBash "isolcpus" ''
+      #     #!/bin/sh
 
-          command=$2
+      #     command=$2
 
-          if [ "$command" = "started" ]; then
-              systemctl set-property --runtime -- system.slice AllowedCPUs=4-15
-              systemctl set-property --runtime -- user.slice AllowedCPUs=4-15
-              systemctl set-property --runtime -- init.scope AllowedCPUs=4-15
-          elif [ "$command" = "release" ]; then
-              systemctl set-property --runtime -- system.slice AllowedCPUs=0-23
-              systemctl set-property --runtime -- user.slice AllowedCPUs=0-23
-              systemctl set-property --runtime -- init.scope AllowedCPUs=0-23
-          fi
-        '';
-      };
+      #     if [ "$command" = "started" ]; then
+      #         systemctl set-property --runtime -- system.slice AllowedCPUs=4-15
+      #         systemctl set-property --runtime -- user.slice AllowedCPUs=4-15
+      #         systemctl set-property --runtime -- init.scope AllowedCPUs=4-15
+      #     elif [ "$command" = "release" ]; then
+      #         systemctl set-property --runtime -- system.slice AllowedCPUs=0-23
+      #         systemctl set-property --runtime -- user.slice AllowedCPUs=0-23
+      #         systemctl set-property --runtime -- init.scope AllowedCPUs=0-23
+      #     fi
+      #   '';
+      # };
     };
   };
   programs.virt-manager.enable = true;
@@ -272,37 +272,38 @@
     in
     [ "L+ /var/lib/qemu/firmware - - - - ${firmware}" ];
 
-  boot = {
-    kernelParams = [
-      "intel_iommu=on"
-      "vfio-pci.ids=8086:56a0,8086:4f90"
-    ];
-    extraModulePackages = with config.boot.kernelPackages; [ kvmfr ];
-    kernelModules = [
-      "vfio_pci"
-      "vfio"
-      "vfio_iommu_type1"
-      "kvmfr"
-    ];
-    extraModprobeConfig = ''
-      options kvmfr static_size_mb=256
-    '';
-    postBootCommands = ''
-      DEV="0000:08:00.0"
-      echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
-      modprobe -i vfio-pci
-    '';
-  };
+  # boot = {
+  #   kernelParams = [
+  #     "intel_iommu=on"
+  #     # Arc A770
+  #     "vfio-pci.ids=8086:56a0,8086:4f90"
+  #   ];
+  #   extraModulePackages = with config.boot.kernelPackages; [ kvmfr ];
+  #   kernelModules = [
+  #     "vfio_pci"
+  #     "vfio"
+  #     "vfio_iommu_type1"
+  #     "kvmfr"
+  #   ];
+  #   extraModprobeConfig = ''
+  #     options kvmfr static_size_mb=256
+  #   '';
+  #   postBootCommands = ''
+  #     DEV="0000:08:00.0"
+  #     echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
+  #     modprobe -i vfio-pci
+  #   '';
+  # };
   networking.bridges.br0.interfaces = [ "enp9s0" ];
   networking.interfaces.br0.useDHCP = true;
 
-  services.udev.extraRules = ''
-    SUBSYSTEM=="kvmfr", OWNER="qhj", GROUP="libvirtd", MODE="0660"
-  '';
-  environment.etc."looking-glass-client.ini".text = ''
-    [app]
-    shmFile=/dev/kvmfr0
-  '';
+  # services.udev.extraRules = ''
+  #   SUBSYSTEM=="kvmfr", OWNER="qhj", GROUP="libvirtd", MODE="0660"
+  # '';
+  # environment.etc."looking-glass-client.ini".text = ''
+  #   [app]
+  #   shmFile=/dev/kvmfr0
+  # '';
 
   swapDevices = [ { device = "/swap/swapfile"; } ];
 
@@ -316,13 +317,15 @@
         ForwardAgent yes
     '';
   };
-  networking.interfaces.enp9s0.wakeOnLan = {
-    enable = true;
-  };
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    openFirewall = true;
-    capSysAdmin = true;
-  };
+  # networking.interfaces.enp9s0.wakeOnLan = {
+  #   enable = true;
+  # };
+  # services.sunshine = {
+  #   enable = true;
+  #   autoStart = true;
+  #   openFirewall = true;
+  #   capSysAdmin = true;
+  # };
+
+  virtualisation.podman.enable = true;
 }
