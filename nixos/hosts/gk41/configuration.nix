@@ -248,6 +248,7 @@ in
     mode = "0400";
   };
   sops.templates.dae-config = {
+    restartUnits = [ config.systemd.services.dae.name ];
     content = ''
       global {
         # Bind to LAN and/or WAN as you want. Replace the interface name to your own.
@@ -285,7 +286,8 @@ in
       group {
         proxy {
           #filter: name(keyword: HK, keyword: SG)
-          policy: min_moving_avg
+          # policy: min_moving_avg
+          policy: fixed(4)
         }
       }
 
