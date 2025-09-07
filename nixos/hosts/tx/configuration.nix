@@ -188,6 +188,7 @@
     moonlight-qt
     chiaki-ng
     # looking-glass-client
+    mpv
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -215,7 +216,7 @@
   virtualisation.waydroid.enable = true;
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo";
-  services.fprintd.enable = true;
+  # services.fprintd.enable = true;
 
   environment.shellAliases = with pkgs; {
     ff = "${fastfetch}/bin/fastfetch";
@@ -328,4 +329,39 @@
   # };
 
   virtualisation.podman.enable = true;
+
+  # networking.firewall.allowedTCPPorts = [ 5933 ];
+  # systemd.packages = [ pkgs.reframe ];
+  # users.users = {
+  #    reframe = {
+  #      isSystemUser = true;
+  #      group = "reframe";
+  #    };
+  # };
+  # users.groups.reframe = {};
+
+  # hardware.display.edid.packages = [
+  #   (pkgs.runCommand "edid-custom" {} ''
+  #     mkdir -p "$out/lib/firmware/edid"
+  #     base64 -d > "$out/lib/firmware/edid/U2723QX.bin" <<'EOF'
+  #     AP///////wAQrHhCTE5TRBsgAQS1PCJ4Ot8VrVBErSUPUFSlSwDRANHAswCpQIGAgQBxT+HATdAA
+  #     oPBwPoAwIDUAVVAhAAAaAAAA/wBKQjRLV04zCiAgICAgAAAA/ABERUxMIFUyNzIzUVgKAAAA/QAX
+  #     Vg+MNgEKICAgICAgAekCAxfxShAfIAQTEhEDAgEjCQcHgwEAAKNmAKDwcB+AMCA1AFVQIQAAGlZe
+  #     AKCgoClQMCA1AFVQIQAAGhFEAKCAAB9QMCA2AFVQIQAAGr8WAKCAOBNAMCA6AFVQIQAAGgAAAAAA
+  #     AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAqQ==
+  #     EOF
+  #   '')
+  # ];
+  # boot.kernelParams = [
+  #   "video=DP-4:e"
+  #   "drm.edid_firmware=edid/U2723QX.bin"    
+  # ];
+  # systemd.services."reframe-server@DP-4" = {
+  #   wantedBy = [ "multi-user.target" ];
+  #   overrideStrategy = "asDropin";
+  # };
+  # systemd.sockets."reframe@DP-4" = {
+  #   wantedBy = [ "sockets.target" ];
+  #   overrideStrategy = "asDropin";
+  # };
 }
