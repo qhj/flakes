@@ -6,8 +6,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "casualsnek";
     repo = "waydroid_script";
-    rev = "main";
-    hash = "sha256-OiZO62cvsFyCUPGpWjhxVm8fZlulhccKylOCX/nEyJU=";
+    rev = "fcb15624db0811615ea9800837a836c4777674bf";
+    hash = "sha256-Epvl6thT6mJqurZV1FV6Zdd6Kn13ZAC/BUaywVLpOIc=";
   };
 
   buildInputs = [

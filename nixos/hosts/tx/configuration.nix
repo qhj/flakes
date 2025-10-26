@@ -186,7 +186,7 @@
     waydroid-script
     chromium
     moonlight-qt
-    chiaki-ng
+    # chiaki-ng
     # looking-glass-client
     mpv
   ];
@@ -229,10 +229,6 @@
       qemu = {
         package = pkgs.qemu_kvm;
         swtpm.enable = true;
-        ovmf = {
-          enable = true;
-          packages = [ pkgs.OVMFFull.fd ];
-        };
         # verbatimConfig = ''
         #   cgroup_device_acl = [
         #     "/dev/null", "/dev/full", "/dev/zero",
@@ -310,7 +306,7 @@
 
   boot.initrd.systemd.enable = true;
 
-  services.udev.packages = with pkgs; [ canokeys-udev-rules ];
+  services.udev.packages = with pkgs; [ canokeys-udev-rules sunshine ];
   programs.ssh = {
     startAgent = true;
     extraConfig = ''
@@ -318,9 +314,49 @@
         ForwardAgent yes
     '';
   };
-  # networking.interfaces.enp9s0.wakeOnLan = {
-  #   enable = true;
-  # };
+  networking.interfaces.enp9s0.wakeOnLan = {
+    enable = true;
+  };
+
+  networking.firewall =
+  let
+    generatePorts = port: offsets: map (offset: port + offset) offsets;
+    defaultPort = 47989;
+  in {
+    allowedTCPPorts = generatePorts defaultPort [
+      (-5)
+      0
+      1
+      21
+    ];
+    allowedUDPPorts = generatePorts defaultPort [
+      9
+      10
+      11
+      13
+      21
+    ];
+  };
+  boot.kernelModules = [ "uinput" ];
+  services.avahi = {
+    enable = lib.mkDefault true;
+    publish = {
+      enable = lib.mkDefault true;
+    };
+  };
+  systemd.services.sunshine = {
+    description = "Self-hosted game stream host for Moonlight";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+
+    serviceConfig = {
+      ExecStart = "${pkgs.sunshine}/bin/sunshine";
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
+  };
+
   # services.sunshine = {
   #   enable = true;
   #   autoStart = true;
@@ -329,39 +365,4 @@
   # };
 
   virtualisation.podman.enable = true;
-
-  # networking.firewall.allowedTCPPorts = [ 5933 ];
-  # systemd.packages = [ pkgs.reframe ];
-  # users.users = {
-  #    reframe = {
-  #      isSystemUser = true;
-  #      group = "reframe";
-  #    };
-  # };
-  # users.groups.reframe = {};
-
-  # hardware.display.edid.packages = [
-  #   (pkgs.runCommand "edid-custom" {} ''
-  #     mkdir -p "$out/lib/firmware/edid"
-  #     base64 -d > "$out/lib/firmware/edid/U2723QX.bin" <<'EOF'
-  #     AP///////wAQrHhCTE5TRBsgAQS1PCJ4Ot8VrVBErSUPUFSlSwDRANHAswCpQIGAgQBxT+HATdAA
-  #     oPBwPoAwIDUAVVAhAAAaAAAA/wBKQjRLV04zCiAgICAgAAAA/ABERUxMIFUyNzIzUVgKAAAA/QAX
-  #     Vg+MNgEKICAgICAgAekCAxfxShAfIAQTEhEDAgEjCQcHgwEAAKNmAKDwcB+AMCA1AFVQIQAAGlZe
-  #     AKCgoClQMCA1AFVQIQAAGhFEAKCAAB9QMCA2AFVQIQAAGr8WAKCAOBNAMCA6AFVQIQAAGgAAAAAA
-  #     AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAqQ==
-  #     EOF
-  #   '')
-  # ];
-  # boot.kernelParams = [
-  #   "video=DP-4:e"
-  #   "drm.edid_firmware=edid/U2723QX.bin"    
-  # ];
-  # systemd.services."reframe-server@DP-4" = {
-  #   wantedBy = [ "multi-user.target" ];
-  #   overrideStrategy = "asDropin";
-  # };
-  # systemd.sockets."reframe@DP-4" = {
-  #   wantedBy = [ "sockets.target" ];
-  #   overrideStrategy = "asDropin";
-  # };
 }
