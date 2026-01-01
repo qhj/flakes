@@ -90,7 +90,7 @@
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -166,7 +166,7 @@
     type = "fcitx5";
     fcitx5 = {
       addons = with pkgs; [
-        fcitx5-chinese-addons
+        qt6Packages.fcitx5-chinese-addons
       ];
       waylandFrontend = true;
     };
@@ -189,6 +189,8 @@
     # chiaki-ng
     # looking-glass-client
     mpv
+    ghostty
+    obs-studio
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -259,15 +261,6 @@
     };
   };
   programs.virt-manager.enable = true;
-  systemd.tmpfiles.rules =
-    let
-      firmware = pkgs.runCommandLocal "qemu-firmware" { } ''
-        mkdir $out
-        cp ${pkgs.qemu}/share/qemu/firmware/*.json $out
-        substituteInPlace $out/*.json --replace ${pkgs.qemu} /run/current-system/sw
-      '';
-    in
-    [ "L+ /var/lib/qemu/firmware - - - - ${firmware}" ];
 
   # boot = {
   #   kernelParams = [
@@ -365,4 +358,15 @@
   # };
 
   virtualisation.podman.enable = true;
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "zh_CN.UTF-8";
+    LC_IDENTIFICATION = "zh_CN.UTF-8";
+    LC_MEASUREMENT = "zh_CN.UTF-8";
+    LC_MONETARY = "zh_CN.UTF-8";
+    LC_NAME = "zh_CN.UTF-8";
+    LC_NUMERIC = "zh_CN.UTF-8";
+    LC_PAPER = "zh_CN.UTF-8";
+    LC_TELEPHONE = "zh_CN.UTF-8";
+    LC_TIME = "zh_CN.UTF-8";
+  };
 }

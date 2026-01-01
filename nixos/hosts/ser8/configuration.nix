@@ -10,7 +10,7 @@
 }:
 
 let
-  secrets-path = builtins.toString inputs.secrets;
+  secrets-path = toString inputs.secrets;
 in
 {
   imports = [

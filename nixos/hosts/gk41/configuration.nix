@@ -10,7 +10,7 @@
 }:
 
 let
-  secrets-path = builtins.toString inputs.secrets;
+  secrets-path = toString inputs.secrets;
   secrets = import inputs.secrets;
 in
 {
@@ -247,6 +247,9 @@ in
   sops.secrets."dae/subscription" = {
     mode = "0400";
   };
+  sops.secrets.server1 = {
+    mode = "0400";
+  };
   sops.templates.dae-config = {
     restartUnits = [ config.systemd.services.dae.name ];
     content = ''
@@ -297,6 +300,7 @@ in
         dip(224.0.0.0/3, 'ff00::/8') -> direct
 
         ### Write your rules below.
+        dip(${config.sops.placeholder.server1}) -> direct
 
         # Disable h3 because it usually consumes too much cpu/mem resources.
         l4proto(udp) && dport(443) -> block

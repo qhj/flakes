@@ -5,7 +5,7 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-24.11";
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
+      url = "github:nix-community/lanzaboote/v0.4.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
@@ -128,6 +128,20 @@
                 additions
               ];
             }
+          ];
+        };
+        ms10 = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            ./nixos/hosts/ms10/configuration.nix
+            sops-nix.nixosModules.sops
+          ];
+        };
+        lh0 = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs outputs; };
+          modules = [
+            ./nixos/hosts/lh0/configuration.nix
+            sops-nix.nixosModules.sops
           ];
         };
       };
