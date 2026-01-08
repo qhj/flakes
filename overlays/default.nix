@@ -5,4 +5,9 @@
       inherit (_prev) callPackage;
       directory = ../pkgs;
     };
+  modifications = final: prev: {
+    helix = import ./helix.nix {
+      inherit final prev;
+    };
+  };
 }

@@ -106,6 +106,7 @@
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
+                modifications
               ];
             }
             lanzaboote.nixosModules.lanzaboote
@@ -126,6 +127,7 @@
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
+                modifications
               ];
             }
           ];
