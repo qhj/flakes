@@ -1,10 +1,10 @@
 { final, prev }:
-final.writeShellApplication {
-  name = "hx";
-  runtimeInputs = [
-    prev.helix
-  ];
-  text =
+
+final.symlinkJoin {
+  name = "helix";
+  paths = [ prev.helix ];
+  buildInputs = [ final.makeWrapper ];
+  postBuild =
     let
       config = final.writers.writeTOML "helix-config" {
         editor = {
@@ -13,7 +13,8 @@ final.writeShellApplication {
         };
       };
     in
-    ''
-      hx -c ${config} "$@"
-    '';
+  ''
+    wrapProgram $out/bin/hx --add-flags "-c ${config}"
+  '';
 }
+
