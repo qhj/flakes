@@ -103,6 +103,7 @@
           };
           modules = [
             ./nixos/hosts/tx/configuration.nix
+            ./nixos/modules/man-cache.nix
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
