@@ -30,11 +30,49 @@
     let
       inherit (self) outputs;
       system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages."${system}";
     in
     {
+      packages."${system}" = {
+        get-flake-root = pkgs.writeShellApplication {
+          name = "get-flake-root";
+          text = ''
+            FLAKE_ROOT="''${FLAKE_ROOT:-}"
+            if [[ -n "$FLAKE_ROOT" ]]; then
+              echo "$FLAKE_ROOT"
+              exit
+            fi
+
+            pwd="$PWD"
+            while true; do
+              if [[ -f "flake.nix" ]]; then
+                echo "$PWD"
+                exit
+              fi
+
+              if [[ $PWD == "/" ]]; then
+                exit 1
+              fi
+
+              cd ..
+            done
+
+            cd "$pwd"
+          '';
+        };
+        nvimcfg = pkgs.writeShellApplication {
+          name = "nvimcfg";
+          runtimeInputs = with pkgs; [
+            neovim
+          ];
+          text = ''
+            FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
+            XDG_CONFIG_HOME="$FLAKE_ROOT"/overlays/neovim nvim "$@"
+          '';
+        };
+      };
       devShells."${system}".default =
         let
-          pkgs = nixpkgs.legacyPackages."${system}";
           fish-config = pkgs.writers.writeFish "fish-config" ''
             # create function fish_dev_prompt
             eval (functions fish_prompt | string replace "(prompt_login)" "dev" | string replace "function fish_prompt" "function fish_dev_prompt" | string collect)
@@ -87,6 +125,8 @@
               };
             in
             ''
+              export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
+
               mkdir -p .zed
               ln -sf ${settings} .zed/settings.json
 

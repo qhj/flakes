@@ -9,5 +9,8 @@
     helix = import ./helix.nix {
       inherit final prev;
     };
+    neovim = import ./neovim {
+      inherit final prev;
+    };
   };
 }

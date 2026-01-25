@@ -172,6 +172,7 @@
     };
   };
   environment.systemPackages = with pkgs; [
+    neovim
     helix
     #fastfetch
     file
