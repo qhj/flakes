@@ -192,6 +192,7 @@
     mpv
     ghostty
     obs-studio
+    noctalia-shell
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -301,13 +302,13 @@
   boot.initrd.systemd.enable = true;
 
   services.udev.packages = with pkgs; [ canokeys-udev-rules sunshine ];
-  programs.ssh = {
-    startAgent = true;
-    extraConfig = ''
-      Host 192.168.77.1
-        ForwardAgent yes
-    '';
-  };
+  # programs.ssh = {
+  #   startAgent = true;
+  #   extraConfig = ''
+  #     Host 192.168.77.1
+  #       ForwardAgent yes
+  #   '';
+  # };
   networking.interfaces.enp9s0.wakeOnLan = {
     enable = true;
   };
@@ -370,4 +371,6 @@
     LC_TELEPHONE = "zh_CN.UTF-8";
     LC_TIME = "zh_CN.UTF-8";
   };
+
+  programs.niri.enable = true;
 }
