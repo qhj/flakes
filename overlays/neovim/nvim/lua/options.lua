@@ -26,3 +26,5 @@ opt.scrolloff = 3
 opt.sidescrolloff = 7
 opt.shiftround = true
 opt.laststatus = 3 
+opt.fillchars = { eob = ' ' }
+

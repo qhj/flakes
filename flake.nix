@@ -30,7 +30,36 @@
     let
       inherit (self) outputs;
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages."${system}";
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [
+          (final: prev: {
+            neovim =
+              (prev.neovim.override {
+                configure = {
+                  packages.paaackage = {
+                    start = with prev.vimPlugins; [
+                      lz-n
+                    ];
+                    opt = with prev.vimPlugins; [
+                      snacks-nvim
+                      blink-cmp
+                      noice-nvim
+                      which-key-nvim
+                    ];
+                  };
+                };
+              }).overrideAttrs
+                (oldAttrs: {
+                  buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ final.makeWrapper ];
+                  postFixup = (oldAttrs.postFixup or "") + ''
+                    substituteInPlace $out/bin/nvim \
+                      --replace-fail "export VIMINIT=" "# export VIMINIT="
+                  '';
+                });
+          })
+        ];
+      };
     in
     {
       packages."${system}" = {
@@ -103,6 +132,7 @@
             git
             nixd
             nixfmt-rfc-style
+            lua-language-server
           ];
           shellHook =
             with pkgs;
