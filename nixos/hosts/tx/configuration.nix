@@ -4,6 +4,7 @@
 
 {
   pkgs,
+  inputs,
   lib,
   config,
   ...
@@ -132,10 +133,10 @@
     '';
   };
   programs.firefox.enable = true;
+  programs.firefox.nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
   programs.firefox.preferences = {
     "browser.tabs.inTitlebar" = 0;
   };
-  programs.adb.enable = true;
   users = {
     groups.qhj.gid = 1000;
     users.qhj = {
@@ -143,7 +144,6 @@
       group = "qhj";
       extraGroups = [
         "wheel"
-        "adbusers"
         (lib.mkIf config.virtualisation.libvirtd.enable "libvirtd")
       ];
       shell = pkgs.fish;
@@ -192,7 +192,28 @@
     mpv
     ghostty
     obs-studio
-    noctalia-shell
+    (
+      let
+        noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      in
+      # add gsettings-desktop-schemas to XDG_DATA_DIRS
+      noctalia.overrideAttrs (oldAttrs: {
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
+          pkgs.wrapGAppsHook3
+        ];
+        # https://nixos.org/manual/nixpkgs/stable/#ssec-gnome-common-issues-double-wrapped
+        dontWrapGApps = true;
+        preFixup = (oldAttrs.preFixup or [ ]) + ''
+          qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+        '';
+      })
+    )
+    ddcutil
+    gpu-screen-recorder
+    gnome-themes-extra # Adwaita theme
+    glib # gsettings
+    android-tools
+    firefoxpwa
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -301,37 +322,42 @@
 
   boot.initrd.systemd.enable = true;
 
-  services.udev.packages = with pkgs; [ canokeys-udev-rules sunshine ];
-  # programs.ssh = {
-  #   startAgent = true;
-  #   extraConfig = ''
-  #     Host 192.168.77.1
-  #       ForwardAgent yes
-  #   '';
-  # };
+  services.udev.packages = with pkgs; [
+    canokeys-udev-rules
+    sunshine
+  ];
+  programs.ssh = {
+    startAgent = true;
+    extraConfig = ''
+      Host 192.168.77.1
+        ForwardAgent yes
+    '';
+  };
+  services.gnome.gcr-ssh-agent.enable = false;
   networking.interfaces.enp9s0.wakeOnLan = {
     enable = true;
   };
 
   networking.firewall =
-  let
-    generatePorts = port: offsets: map (offset: port + offset) offsets;
-    defaultPort = 47989;
-  in {
-    allowedTCPPorts = generatePorts defaultPort [
-      (-5)
-      0
-      1
-      21
-    ];
-    allowedUDPPorts = generatePorts defaultPort [
-      9
-      10
-      11
-      13
-      21
-    ];
-  };
+    let
+      generatePorts = port: offsets: map (offset: port + offset) offsets;
+      defaultPort = 47989;
+    in
+    {
+      allowedTCPPorts = generatePorts defaultPort [
+        (-5)
+        0
+        1
+        21
+      ];
+      allowedUDPPorts = generatePorts defaultPort [
+        9
+        10
+        11
+        13
+        21
+      ];
+    };
   boot.kernelModules = [ "uinput" ];
   services.avahi = {
     enable = lib.mkDefault true;
@@ -373,4 +399,15 @@
   };
 
   programs.niri.enable = true;
+  hardware.i2c.enable = true;
+
+  # remove buttons on titlebar
+  programs.dconf.profiles.user.databases = [
+    {
+      lockAll = true;
+      settings = {
+        "org/gnome/desktop/wm/preferences".button-layout = "";
+      };
+    }
+  ];
 }

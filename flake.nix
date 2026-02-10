@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "nixpkgs/nixos-24.11";
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,15 +15,19 @@
       url = "git+ssh://git@github.com/qhj/no-secrets-here.git?ref=main&shallow=1";
       flake = false;
     };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      nixpkgs-stable,
       lanzaboote,
       sops-nix,
+      noctalia,
       ...
     }@inputs:
     let
@@ -131,7 +134,7 @@
             fish-wrapper
             git
             nixd
-            nixfmt-rfc-style
+            nixfmt
             lua-language-server
           ];
           shellHook =
@@ -166,11 +169,7 @@
       overlays = import ./overlays;
       nixosConfigurations = {
         tx = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            pkgs-stable = import nixpkgs-stable {
-              inherit system;
-            };
-          };
+          specialArgs = { inherit inputs; };
           modules = [
             ./nixos/hosts/tx/configuration.nix
             ./nixos/modules/man-cache.nix
