@@ -208,6 +208,16 @@
         '';
       })
     )
+    (writeShellApplication {
+      name = "auto-dark";
+      runtimeInputs = [ glib ];
+      text = ''
+        gsettings set org.gnome.desktop.interface color-scheme "$([ "$1" = true ] && printf 'prefer-dark' || printf 'prefer-light')"
+
+        # needed for some apps like Remmina
+        gsettings set org.gnome.desktop.interface gtk-theme "$([ "$1" == true ] && printf 'Adwaita-dark' || printf 'Adwaita')"
+      '';
+    })
     ddcutil
     gpu-screen-recorder
     gnome-themes-extra # Adwaita theme
