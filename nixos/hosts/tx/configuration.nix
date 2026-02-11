@@ -145,6 +145,7 @@
       extraGroups = [
         "wheel"
         (lib.mkIf config.virtualisation.libvirtd.enable "libvirtd")
+        (lib.mkIf config.hardware.i2c.enable "i2c")
       ];
       shell = pkgs.fish;
     };
