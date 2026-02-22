@@ -1,0 +1,24 @@
+environment {
+  QT_QPA_PLATFORMTHEME "gtk3"
+}
+
+spawn-at-startup "noctalia-shell"
+spawn-at-startup "@polkit-kde-agent-1@/libexec/polkit-kde-authentication-agent-1"
+
+prefer-no-csd
+
+binds {
+    Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "ghostty"; }
+    Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn-sh "noctalia-shell ipc call launcher toggle"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn-sh "noctalia-shell ipc call lockScreen lock"; }
+}
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+gestures {
+    hot-corners {
+        bottom-right
+    }
+}
