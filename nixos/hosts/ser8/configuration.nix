@@ -6,6 +6,7 @@
   inputs,
   config,
   pkgs,
+  lib,
   ...
 }:
 
@@ -140,7 +141,10 @@ in
     users.qhj = {
       isNormalUser = true;
       group = "qhj";
-      extraGroups = [ "wheel" ];
+      extraGroups = [
+        "wheel"
+        (lib.mkIf config.hardware.i2c.enable "i2c")
+      ];
       shell = pkgs.fish;
     };
   };
@@ -169,6 +173,37 @@ in
     telegram-desktop
     moonlight-qt
     wl-clipboard
+    ghostty
+    (
+      let
+        noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      in
+      # add gsettings-desktop-schemas to XDG_DATA_DIRS
+      noctalia.overrideAttrs (oldAttrs: {
+        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
+          pkgs.wrapGAppsHook3
+        ];
+        # https://nixos.org/manual/nixpkgs/stable/#ssec-gnome-common-issues-double-wrapped
+        dontWrapGApps = true;
+        preFixup = (oldAttrs.preFixup or [ ]) + ''
+          qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
+        '';
+      })
+    )
+    (writeShellApplication {
+      name = "auto-dark";
+      runtimeInputs = [ glib ];
+      text = ''
+        gsettings set org.gnome.desktop.interface color-scheme "$([ "$1" = true ] && printf 'prefer-dark' || printf 'prefer-light')"
+
+        # needed for some apps like Remmina
+        gsettings set org.gnome.desktop.interface gtk-theme "$([ "$1" == true ] && printf 'Adwaita-dark' || printf 'Adwaita')"
+      '';
+    })
+    ddcutil
+    gpu-screen-recorder
+    gnome-themes-extra
+    glib
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -256,4 +291,17 @@ in
   };
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
   programs.ssh.startAgent = true;
+  services.netbird.enable = true;
+  programs.niri.enable = true;
+  hardware.i2c.enable = true;
+
+  programs.dconf.profiles.user.databases = [
+    {
+      lockAll = true;
+      settings = {
+        "org/gnome/desktop/wm/preferences".button-layout = "";
+      };
+    }
+  ];
+  services.gnome.gcr-ssh-agent.enable = false;
 }
