@@ -17,7 +17,7 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ../../modules/niri.nix
+    (import ../../modules/niri { inherit inputs; })
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -175,36 +175,6 @@ in
     moonlight-qt
     wl-clipboard
     ghostty
-    (
-      let
-        noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      in
-      # add gsettings-desktop-schemas to XDG_DATA_DIRS
-      noctalia.overrideAttrs (oldAttrs: {
-        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
-          pkgs.wrapGAppsHook3
-        ];
-        # https://nixos.org/manual/nixpkgs/stable/#ssec-gnome-common-issues-double-wrapped
-        dontWrapGApps = true;
-        preFixup = (oldAttrs.preFixup or [ ]) + ''
-          qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-        '';
-      })
-    )
-    (writeShellApplication {
-      name = "auto-dark";
-      runtimeInputs = [ glib ];
-      text = ''
-        gsettings set org.gnome.desktop.interface color-scheme "$([ "$1" = true ] && printf 'prefer-dark' || printf 'prefer-light')"
-
-        # needed for some apps like Remmina
-        gsettings set org.gnome.desktop.interface gtk-theme "$([ "$1" == true ] && printf 'Adwaita-dark' || printf 'Adwaita')"
-      '';
-    })
-    ddcutil
-    gpu-screen-recorder
-    gnome-themes-extra
-    glib
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -293,16 +263,4 @@ in
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
   programs.ssh.startAgent = true;
   services.netbird.enable = true;
-  programs.niri.enable = true;
-  hardware.i2c.enable = true;
-
-  programs.dconf.profiles.user.databases = [
-    {
-      lockAll = true;
-      settings = {
-        "org/gnome/desktop/wm/preferences".button-layout = "";
-      };
-    }
-  ];
-  services.gnome.gcr-ssh-agent.enable = false;
 }

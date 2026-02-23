@@ -15,6 +15,7 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./lanzaboote.nix
+    (import ../../modules/niri { inherit inputs; })
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -136,6 +137,7 @@
   programs.firefox.nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
   programs.firefox.preferences = {
     "browser.tabs.inTitlebar" = 0;
+    "ui.key.menuAccessKeyFocuses" = false;
   };
   users = {
     groups.qhj.gid = 1000;
@@ -193,36 +195,6 @@
     mpv
     ghostty
     obs-studio
-    (
-      let
-        noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      in
-      # add gsettings-desktop-schemas to XDG_DATA_DIRS
-      noctalia.overrideAttrs (oldAttrs: {
-        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
-          pkgs.wrapGAppsHook3
-        ];
-        # https://nixos.org/manual/nixpkgs/stable/#ssec-gnome-common-issues-double-wrapped
-        dontWrapGApps = true;
-        preFixup = (oldAttrs.preFixup or [ ]) + ''
-          qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-        '';
-      })
-    )
-    (writeShellApplication {
-      name = "auto-dark";
-      runtimeInputs = [ glib ];
-      text = ''
-        gsettings set org.gnome.desktop.interface color-scheme "$([ "$1" = true ] && printf 'prefer-dark' || printf 'prefer-light')"
-
-        # needed for some apps like Remmina
-        gsettings set org.gnome.desktop.interface gtk-theme "$([ "$1" == true ] && printf 'Adwaita-dark' || printf 'Adwaita')"
-      '';
-    })
-    ddcutil
-    gpu-screen-recorder
-    gnome-themes-extra # Adwaita theme
-    glib # gsettings
     android-tools
     firefoxpwa
   ];
@@ -344,7 +316,6 @@
         ForwardAgent yes
     '';
   };
-  services.gnome.gcr-ssh-agent.enable = false;
   networking.interfaces.enp9s0.wakeOnLan = {
     enable = true;
   };
@@ -408,17 +379,4 @@
     LC_TELEPHONE = "zh_CN.UTF-8";
     LC_TIME = "zh_CN.UTF-8";
   };
-
-  programs.niri.enable = true;
-  hardware.i2c.enable = true;
-
-  # remove buttons on titlebar
-  programs.dconf.profiles.user.databases = [
-    {
-      lockAll = true;
-      settings = {
-        "org/gnome/desktop/wm/preferences".button-layout = "";
-      };
-    }
-  ];
 }
