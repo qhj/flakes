@@ -14,7 +14,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ./lanzaboote.nix
+    ../../modules/lanzaboote.nix
     (import ../../modules/niri { inherit inputs; })
   ];
 
@@ -302,8 +302,6 @@
   # '';
 
   swapDevices = [ { device = "/swap/swapfile"; } ];
-
-  boot.initrd.systemd.enable = true;
 
   services.udev.packages = with pkgs; [
     canokeys-udev-rules

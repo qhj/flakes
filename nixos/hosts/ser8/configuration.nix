@@ -17,6 +17,7 @@ in
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ../../modules/lanzaboote.nix
     (import ../../modules/niri { inherit inputs; })
   ];
 

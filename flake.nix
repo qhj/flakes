@@ -27,7 +27,6 @@
       nixpkgs,
       lanzaboote,
       sops-nix,
-      noctalia,
       ...
     }@inputs:
     let
@@ -193,6 +192,7 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             ./nixos/hosts/ser8/configuration.nix
+            ./nixos/modules/man-cache.nix
             sops-nix.nixosModules.sops
             {
               nixpkgs.overlays = with self.overlays; [
@@ -200,6 +200,7 @@
                 modifications
               ];
             }
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
         ms10 = nixpkgs.lib.nixosSystem {
