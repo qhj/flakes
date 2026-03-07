@@ -168,10 +168,10 @@
     "secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1767249121,
-        "narHash": "sha256-kGbG2knmMeE9S9SL8+XTpUOs9qjkbm45YJz/K1IoXE0=",
+        "lastModified": 1772806823,
+        "narHash": "sha256-6Zj5E925yFE42iHTaal3Pw8u/FZBFj1AGQ8p4m7kJSw=",
         "ref": "main",
-        "rev": "abdaf9bb45633fb3164d41a5461a9dcc17f1a993",
+        "rev": "a7aa5fc6ef5433ad75e672e4fbd251bbe3d0a6e5",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/qhj/no-secrets-here.git"

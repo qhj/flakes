@@ -197,6 +197,7 @@
     obs-studio
     android-tools
     firefoxpwa
+    dig
   ];
   fonts.fontconfig = {
     defaultFonts = {

@@ -14,9 +14,12 @@ let
   secrets = import inputs.secrets;
 in
 {
+  disabledModules = [ "services/networking/sing-box.nix" ];
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ../../modules/network-proxy
+    ../../modules/sing-box
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -161,6 +164,7 @@ in
       };
       "60-ppp" = {
         matchConfig.Type = "ppp";
+        networkConfig.IPv6AcceptRA= false;
       };
     };
   };
@@ -183,6 +187,7 @@ in
     helix
     fastfetch
     wol
+    dig
   ];
 
   sops = {
@@ -215,10 +220,13 @@ in
           plugin pppoe.so
           enp2s0
           name "${secrets.pppoe.username}"
-          usepeerdns
           persist
           defaultroute
           noauth
+          # eliminate `Failed to create /etc/ppp/resolv.conf: Read-only file system` error
+          #usepeerdns
+          # or
+          #noresolvconf
         '';
       };
     };
@@ -234,6 +242,7 @@ in
       dhcp-range = [
         "192.168.77.2,192.168.77.254,12h"
       ];
+      log-queries = true;
     };
   };
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
@@ -244,93 +253,25 @@ in
   ];
   nix.settings.experimental-features = "nix-command flakes";
 
-  sops.secrets."dae/subscription" = {
-    mode = "0400";
-  };
-  sops.secrets.server1 = {
-    mode = "0400";
-  };
-  sops.templates.dae-config = {
-    restartUnits = [ config.systemd.services.dae.name ];
-    content = ''
-      global {
-        # Bind to LAN and/or WAN as you want. Replace the interface name to your own.
-        lan_interface: br0
-        wan_interface: auto # Use "auto" to auto detect WAN interface.
-
-        log_level: info
-        allow_insecure: false
-        auto_config_kernel_parameter: true
-      }
-
-      subscription {
-        "${config.sops.placeholder."dae/subscription"}"
-      }
-
-      # See https://github.com/daeuniverse/dae/blob/main/docs/en/configuration/dns.md for full examples.
-      dns {
-        upstream {
-          googledns: 'tcp+udp://dns.google:53'
-          alidns: 'udp://223.5.5.5:53'
-        }
-        routing {
-          request {
-            qtype(https) -> reject
-            fallback: alidns
-          }
-          response {
-            upstream(googledns) -> accept
-            ip(geoip:private) && !qname(geosite:cn) -> googledns
-            fallback: accept
-          }
-        }
-      }
-
-      group {
-        proxy {
-          #filter: name(keyword: HK, keyword: SG)
-          # policy: min_moving_avg
-          policy: fixed(4)
-        }
-      }
-
-      # See https://github.com/daeuniverse/dae/blob/main/docs/en/configuration/routing.md for full examples.
-      routing {
-        pname(NetworkManager) -> direct
-        dip(224.0.0.0/3, 'ff00::/8') -> direct
-
-        ### Write your rules below.
-        dip(${config.sops.placeholder.server1}) -> direct
-
-        # Disable h3 because it usually consumes too much cpu/mem resources.
-        l4proto(udp) && dport(443) -> block
-        dip(geoip:private) -> direct
-        dip(geoip:cn) -> direct
-        domain(geosite:cn) -> direct
-
-        fallback: proxy
-      }
-    '';
-    mode = "0400";
-  };
-  services.dae = {
-    enable = true;
-    configFile = config.sops.templates.dae-config.path;
-  };
   networking.nftables = {
     enable = true;
-    ruleset = ''
-      table inet pmtu {
-        chain forward {
-          type filter hook forward priority filter; policy accept;
-          oifname "ppp0" tcp flags syn tcp option maxseg size set rt mtu
-        }
-      }
-    '';
+    tables = {
+      pmtu = {
+        enable = true;
+        family = "inet";
+        content = ''
+          chain forward {
+            type filter hook forward priority filter; policy accept;
+            oifname "ppp0" tcp flags syn tcp option maxseg size set rt mtu
+          }
+        '';
+      };
+    };
   };
   security.pam = {
     rssh.enable = true;
     services.sudo.rssh = true;
   };
   services.netbird.enable = true;
+  network-proxy.enable = true;
 }
