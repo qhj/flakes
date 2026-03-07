@@ -6,6 +6,13 @@
 
 {
   programs.niri.enable = true;
+  # place `include "/etc/niri/config.kdl"` in ~/.config/niri/config.kdl like:
+  # include "/etc/niri/config.kdl"
+  #
+  # output "DP-1" {
+  #     scale 2
+  # }
+  #
   environment.etc."niri/config.kdl".source = pkgs.runCommandLocal "niri-base-config.kdl" { } ''
     echo 'include "${pkgs.niri.src}/resources/default-config.kdl"' > $out
     echo >> $out
@@ -33,6 +40,7 @@
       })
     )
     (writeShellApplication {
+      # place `auto-dark "$1"` in noctalia shell **Theme changed** hook
       name = "auto-dark";
       runtimeInputs = [ glib ];
       text = ''
@@ -42,6 +50,7 @@
         gsettings set org.gnome.desktop.interface gtk-theme "$([ "$1" == true ] && printf 'Adwaita-dark' || printf 'Adwaita')"
       '';
     })
+    fastfetch
     ddcutil
     gpu-screen-recorder
     gnome-themes-extra # Adwaita theme
