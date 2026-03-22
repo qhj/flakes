@@ -48,6 +48,7 @@
 
         # needed for some apps like Remmina
         gsettings set org.gnome.desktop.interface gtk-theme "$([ "$1" == true ] && printf 'Adwaita-dark' || printf 'Adwaita')"
+        gsettings set org.gnome.desktop.interface icon-theme "$([ "$1" == true ] && printf 'breeze-dark' || printf 'breeze')"
       '';
     })
     fastfetch

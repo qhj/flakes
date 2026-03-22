@@ -273,5 +273,18 @@ in
     services.sudo.rssh = true;
   };
   services.netbird.enable = true;
+  systemd.services.netbird-restart = {
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.systemd}/bin/systemctl restart netbird.service";
+    };
+  };
+  systemd.timers.netbird-restart = {
+    timerConfig = {
+      OnCalendar = "*-*-* 03:15:00";
+      Unit = "netbird-restart.service";
+    };
+    wantedBy = [ "timers.target" ];
+  };
   network-proxy.enable = true;
 }

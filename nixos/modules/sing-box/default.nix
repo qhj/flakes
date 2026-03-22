@@ -82,5 +82,19 @@ in
       };
       groups.sing-box = { };
     };
+
+    systemd.services.sing-box-restart = {
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.systemd}/bin/systemctl restart sing-box.service";
+      };
+    };
+    systemd.timers.sing-box-restart = {
+      timerConfig = {
+        OnCalendar = "*-*-* 03:15:00";
+        Unit = "sing-box-restart.service";
+      };
+      wantedBy = [ "timers.target" ];
+    };
   };
 }
