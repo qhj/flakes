@@ -198,6 +198,7 @@
     android-tools
     firefoxpwa
     dig
+    fishPlugins.tide
   ];
   fonts.fontconfig = {
     defaultFonts = {
