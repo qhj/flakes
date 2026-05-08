@@ -56,6 +56,7 @@
     gpu-screen-recorder
     gnome-themes-extra # Adwaita theme
     glib # gsettings
+    xwayland-satellite
   ];
   hardware.i2c.enable = true;
 
