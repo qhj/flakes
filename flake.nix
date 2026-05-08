@@ -168,7 +168,7 @@
       overlays = import ./overlays;
       nixosConfigurations = {
         tx = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs outputs; };
           modules = [
             ./nixos/hosts/tx/configuration.nix
             ./nixos/modules/man-cache.nix

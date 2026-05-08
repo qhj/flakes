@@ -19,6 +19,7 @@ in
     ./hardware-configuration.nix
     ../../modules/lanzaboote.nix
     (import ../../modules/niri { inherit inputs; })
+    ../../modules/fish.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -130,9 +131,6 @@ in
   networking.hostName = "ser8";
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Shanghai";
-  programs.fish = {
-    enable = true;
-  };
   programs.firefox.enable = true;
   programs.firefox.preferences = {
     "browser.tabs.inTitlebar" = 0;
@@ -147,7 +145,7 @@ in
         "wheel"
         (lib.mkIf config.hardware.i2c.enable "i2c")
       ];
-      shell = pkgs.fish;
+      shell = lib.mkIf config.programs.fish.enable pkgs.fish;
     };
   };
   services.pipewire = {

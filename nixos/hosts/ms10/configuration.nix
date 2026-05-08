@@ -1,13 +1,21 @@
-{ inputs, pkgs, ...}:
+{
+  inputs,
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 let
   secrets-path = toString inputs.secrets;
-in {
+in
+{
   imports = [
     ./hardware-configuration.nix
     ./postgresql.nix
     ./frpc.nix
     ./pocket-id.nix
+    ../../modules/fish.nix
   ];
 
   system.stateVersion = "22.11";
@@ -26,14 +34,13 @@ in {
     };
   };
 
-  programs.fish.enable = true;
   users = {
     groups.qhj.gid = 1000;
     users.qhj = {
       isNormalUser = true;
       group = "qhj";
       extraGroups = [ "wheel" ];
-      shell = pkgs.fish;
+      shell = lib.mkIf config.programs.fish.enable pkgs.fish;
       openssh.authorizedKeys.keys = [
         "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
       ];
@@ -48,13 +55,15 @@ in {
     defaultGateway = "192.168.77.1";
     nameservers = [ "192.168.77.1" ];
     bridges.br0.interfaces = [ "enp3s0f0" ];
-    interfaces.br0.ipv4.addresses = [{
-      address = "192.168.77.2";
-      prefixLength = 24;
-    }];
+    interfaces.br0.ipv4.addresses = [
+      {
+        address = "192.168.77.2";
+        prefixLength = 24;
+      }
+    ];
     nat = {
       enable = true;
-      internalInterfaces = ["ve-+"];
+      internalInterfaces = [ "ve-+" ];
       externalInterface = "br0";
     };
   };

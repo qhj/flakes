@@ -6,6 +6,7 @@
   inputs,
   config,
   pkgs,
+  lib,
   ...
 }:
 
@@ -20,6 +21,7 @@ in
     ./hardware-configuration.nix
     ../../modules/network-proxy
     ../../modules/sing-box
+    ../../modules/fish.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -164,18 +166,17 @@ in
       };
       "60-ppp" = {
         matchConfig.Type = "ppp";
-        networkConfig.IPv6AcceptRA= false;
+        networkConfig.IPv6AcceptRA = false;
       };
     };
   };
 
-  programs.fish.enable = true;
   users.groups.qhj.gid = 1000;
   users.users.qhj = {
     isNormalUser = true;
     group = "qhj";
     extraGroups = [ "wheel" ];
-    shell = pkgs.fish;
+    shell = lib.mkIf config.programs.fish.enable pkgs.fish;
     openssh.authorizedKeys.keys = [
       "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
     ];

@@ -5,6 +5,7 @@
 {
   pkgs,
   inputs,
+  outputs,
   lib,
   config,
   ...
@@ -16,6 +17,8 @@
     ./hardware-configuration.nix
     ../../modules/lanzaboote.nix
     (import ../../modules/niri { inherit inputs; })
+    (import ./dev-container.nix {inherit outputs;})
+    ../../modules/fish.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -127,12 +130,6 @@
   networking.hostName = "tx";
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Shanghai";
-  programs.fish = {
-    enable = true;
-    interactiveShellInit = ''
-      set fish_greeting
-    '';
-  };
   programs.firefox.enable = true;
   programs.firefox.nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
   programs.firefox.preferences = {
@@ -149,7 +146,7 @@
         (lib.mkIf config.virtualisation.libvirtd.enable "libvirtd")
         (lib.mkIf config.hardware.i2c.enable "i2c")
       ];
-      shell = pkgs.fish;
+      shell = lib.mkIf config.programs.fish.enable pkgs.fish;
     };
   };
   services.pipewire = {
@@ -198,7 +195,6 @@
     android-tools
     firefoxpwa
     dig
-    fishPlugins.tide
   ];
   fonts.fontconfig = {
     defaultFonts = {

@@ -1,11 +1,19 @@
-{ inputs, pkgs, ...}:
+{
+  inputs,
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 
 let
   secrets-path = toString inputs.secrets;
-in {
+in
+{
   imports = [
     ./hardware-configuration.nix
     ./frps.nix
+    ../../modules/fish.nix
   ];
 
   system.stateVersion = "22.11";
@@ -31,14 +39,13 @@ in {
     };
   };
 
-  programs.fish.enable = true;
   users = {
     groups.qhj.gid = 1000;
     users.qhj = {
       isNormalUser = true;
       group = "qhj";
       extraGroups = [ "wheel" ];
-      shell = pkgs.fish;
+      shell = lib.mkIf config.programs.fish.enable pkgs.fish;
       openssh.authorizedKeys.keys = [
         "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
       ];
@@ -67,7 +74,10 @@ in {
     fastfetch
   ];
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
   services.caddy = {
     enable = true;
   };
