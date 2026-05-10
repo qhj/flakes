@@ -23,3 +23,7 @@ gestures {
         bottom-right
     }
 }
+
+window-rule {
+    open-maximized-to-edges false
+}
