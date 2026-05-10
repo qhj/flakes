@@ -1,5 +1,6 @@
 environment {
   QT_QPA_PLATFORMTHEME "gtk3"
+  XDG_MENU_PREFIX "plasma-"
 }
 
 spawn-at-startup "noctalia-shell"
