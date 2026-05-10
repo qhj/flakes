@@ -25,4 +25,7 @@
   services.caddy.virtualHosts."id.qhj.moe".extraConfig = ''
     reverse_proxy http://localhost:1411
   '';
+  services.caddy.virtualHosts."vw.qhj.moe".extraConfig = ''
+    reverse_proxy http://localhost:8000
+  '';
 }

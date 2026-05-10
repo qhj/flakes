@@ -23,9 +23,13 @@
               type = "unix_domain_socket";
               unixPath = "/run/pocket-id/sock";
             };
-            # localIP = "127.0.0.1";
-            # localPort = 1411;
             remotePort = 1411;
+          }
+          {
+            name = "vw";
+            type = "tcp";
+            localPort = 8000;
+            remotePort = 8000;
           }
         ];
         serverAddr = "{{ .Envs.FRP_SERVER_ADDR }}";

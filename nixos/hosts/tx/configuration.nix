@@ -308,6 +308,8 @@
   programs.ssh = {
     startAgent = true;
     extraConfig = ''
+      Host *
+        SetEnv TERM=xterm-256color
       Host 192.168.77.1
         ForwardAgent yes
     '';

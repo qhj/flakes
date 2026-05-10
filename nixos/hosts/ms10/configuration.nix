@@ -16,6 +16,7 @@ in
     ./frpc.nix
     ./pocket-id.nix
     ../../modules/fish.nix
+    ./vaultwarden.nix
   ];
 
   system.stateVersion = "22.11";
@@ -71,7 +72,7 @@ in
   services.samba = {
     enable = true;
     openFirewall = true;
-    shares = {
+    settings = {
       nas = {
         path = "/smb";
         writeable = true;

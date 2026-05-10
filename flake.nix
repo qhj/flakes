@@ -136,6 +136,12 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             ./nixos/hosts/gk41/configuration.nix
+            {
+              nixpkgs.overlays = with self.overlays; [
+                additions
+                modifications
+              ];
+            }
             sops-nix.nixosModules.sops
           ];
         };
@@ -158,6 +164,12 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             ./nixos/hosts/ms10/configuration.nix
+            {
+              nixpkgs.overlays = with self.overlays; [
+                additions
+                modifications
+              ];
+            }
             sops-nix.nixosModules.sops
           ];
         };
@@ -165,6 +177,12 @@
           specialArgs = { inherit inputs outputs; };
           modules = [
             ./nixos/hosts/lh0/configuration.nix
+            {
+              nixpkgs.overlays = with self.overlays; [
+                additions
+                modifications
+              ];
+            }
             sops-nix.nixosModules.sops
           ];
         };

@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 
 {
   services.postgresql = {
@@ -10,6 +10,12 @@
       }
     ];
   };
+  sops.secrets."pocketid/encryption_key" = {};
+  sops.templates.pocketIdEnvfile = {
+    content = ''
+      ENCRYPTION_KEY=${config.sops.placeholder."pocketid/encryption_key"}
+    '';
+  };
 
   services.pocket-id = {
     enable = true;
@@ -18,9 +24,9 @@
       TRUST_PROXY = true;
       UNIX_SOCKET = "/run/pocket-id/sock";
       UNIX_SOCKET_MODE = "0660";
-      DB_PROVIDER = "postgres";
-      DB_CONNECTION_STRING = "user=pocket-id dbname=pocket-id host=/run/postgresql";
+      DB_CONNECTION_STRING = "postgresql://localhost/pocket-id?host=/run/postgresql";
     };
+    environmentFile = config.sops.templates.pocketIdEnvfile.path;
   };
 
   systemd.services = {
