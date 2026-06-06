@@ -287,7 +287,7 @@ in
   };
   systemd.timers.netbird-restart = {
     timerConfig = {
-      OnCalendar = "*-*-* 03:15:00";
+      OnCalendar = "*-*-* 02:05:00";
       Unit = "netbird-restart.service";
     };
     wantedBy = [ "timers.target" ];
