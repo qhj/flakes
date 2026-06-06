@@ -273,11 +273,16 @@ in
     rssh.enable = true;
     services.sudo.rssh = true;
   };
-  services.netbird.enable = true;
+  services.netbird.clients.client = {
+    port = 51820;
+    name = "client";
+    interface = "wt0";
+    bin.suffix = "";
+  };
   systemd.services.netbird-restart = {
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${pkgs.systemd}/bin/systemctl restart netbird.service";
+      ExecStart = "${pkgs.systemd}/bin/systemctl restart netbird-client.service";
     };
   };
   systemd.timers.netbird-restart = {

@@ -7,6 +7,7 @@
   config = lib.mkIf config.network-proxy.enable (
     let
       singBoxUser = config.systemd.services.sing-box.serviceConfig.User;
+      netbirdClientUser = config.systemd.services.netbird-client.serviceConfig.User;
       mark = "7";
       netbirdMark = "0x1bd00";
     in
@@ -27,6 +28,7 @@
         enable = true;
         preCheckRuleset = ''
           sed 's/skuid ${singBoxUser}/skuid nobody/g' -i ruleset.conf
+          sed 's/skuid ${netbirdClientUser}/skuid nobody/g' -i ruleset.conf
         '';
         ruleset = ''
           table ip tp {
@@ -62,6 +64,9 @@
               chain output {
                   type route hook output priority mangle;
                   meta skuid ${singBoxUser} accept
+                  # direct to api.netbird.io
+                  meta skuid ${netbirdClientUser} meta nftrace set 1 accept;
+                  # needed for network routes
                   mark ${netbirdMark} accept
                   meta l4proto { tcp, udp } th dport 53 meta mark set ${mark} accept
                   ip daddr @ipv4_list accept
