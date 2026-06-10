@@ -2,7 +2,7 @@
 
 {
   networking.firewall.allowedTCPPorts = [ 7000 ];
-  sops.secrets.frpAuthToken = {};
+  sops.secrets.frpAuthToken = { };
   sops.templates.envfile = {
     content = ''
       FRP_AUTH_TOKEN=${config.sops.placeholder.frpAuthToken}

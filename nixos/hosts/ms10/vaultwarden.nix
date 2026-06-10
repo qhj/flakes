@@ -1,8 +1,8 @@
 { config, ... }:
 
 {
-  sops.secrets."vaultwarden/client_id" = {};
-  sops.secrets."vaultwarden/client_secret" = {};
+  sops.secrets."vaultwarden/client_id" = { };
+  sops.secrets."vaultwarden/client_secret" = { };
   sops.templates.vwEnvfile = {
     content = ''
       SSO_CLIENT_ID=${config.sops.placeholder."vaultwarden/client_id"}

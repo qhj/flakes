@@ -1,0 +1,8 @@
+{
+  "name": "flakes",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "25.9.2"
+  }
+}

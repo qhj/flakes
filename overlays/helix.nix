@@ -13,8 +13,7 @@ final.symlinkJoin {
         };
       };
     in
-  ''
-    wrapProgram $out/bin/hx --add-flags "-c ${config}"
-  '';
+    ''
+      wrapProgram $out/bin/hx --add-flags "-c ${config}"
+    '';
 }
-

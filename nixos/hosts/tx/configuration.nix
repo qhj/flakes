@@ -17,7 +17,7 @@
     ./hardware-configuration.nix
     ../../modules/lanzaboote.nix
     (import ../../modules/niri { inherit inputs; })
-    (import ./dev-container.nix {inherit outputs;})
+    (import ./dev-container.nix { inherit outputs; })
     ../../modules/fish.nix
   ];
 
@@ -195,6 +195,7 @@
     android-tools
     firefoxpwa
     dig
+    bitwarden-desktop
   ];
   fonts.fontconfig = {
     defaultFonts = {
@@ -379,9 +380,9 @@
   };
 
   environment.sessionVariables = {
-    XDG_CACHE_HOME  = "$HOME/.cache";
+    XDG_CACHE_HOME = "$HOME/.cache";
     XDG_CONFIG_HOME = "$HOME/.config";
-    XDG_DATA_HOME   = "$HOME/.local/share";
-    XDG_STATE_HOME  = "$HOME/.local/state";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_STATE_HOME = "$HOME/.local/state";
   };
 }

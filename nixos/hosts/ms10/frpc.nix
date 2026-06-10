@@ -1,8 +1,8 @@
 { config, ... }:
 
 {
-  sops.secrets.frpServerAddr = {};
-  sops.secrets.frpAuthToken = {};
+  sops.secrets.frpServerAddr = { };
+  sops.secrets.frpAuthToken = { };
   sops.templates.envfile = {
     content = ''
       FRP_SERVER_ADDR=${config.sops.placeholder.frpServerAddr}

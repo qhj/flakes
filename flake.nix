@@ -64,6 +64,7 @@
       };
     in
     {
+      formatter.x86_64-linux = pkgs.nixfmt-tree;
       packages."${system}" = {
         get-flake-root = pkgs.writeShellApplication {
           name = "get-flake-root";
@@ -109,6 +110,12 @@
           nixd
           nixfmt
           lua-language-server
+          nodejs_24
+          typescript
+          typescript-language-server
+          bun
+          biome
+          vscode-json-languageserver
         ];
         shellHook = ''
           export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})

@@ -10,7 +10,7 @@
       }
     ];
   };
-  sops.secrets."pocketid/encryption_key" = {};
+  sops.secrets."pocketid/encryption_key" = { };
   sops.templates.pocketIdEnvfile = {
     content = ''
       ENCRYPTION_KEY=${config.sops.placeholder."pocketid/encryption_key"}
@@ -20,7 +20,7 @@
   services.pocket-id = {
     enable = true;
     settings = {
-      APP_URL= "https://id.qhj.moe";
+      APP_URL = "https://id.qhj.moe";
       TRUST_PROXY = true;
       UNIX_SOCKET = "/run/pocket-id/sock";
       UNIX_SOCKET_MODE = "0660";
