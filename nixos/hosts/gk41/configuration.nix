@@ -238,13 +238,43 @@ in
     settings = {
       interface = "br0";
       bind-interfaces = true;
-      server = [ "114.114.114.114" ];
+      server = [ "1.1.1.1" ];
       dhcp-host = "192.168.77.1";
       dhcp-range = [
         "192.168.77.2,192.168.77.254,12h"
       ];
+      conf-dir = "/etc/dnsmasq.d";
       log-queries = true;
     };
+  };
+  systemd.tmpfiles.rules = [ "d /etc/dnsmasq.d 0755 root root -" ];
+  systemd.services.dnsmasq-china-list-update = {
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.nodejs_24}/bin/node ${./update-dnsmasq-china-list.ts}";
+      ExecStartPost = "${pkgs.systemd}/bin/systemctl restart dnsmasq.service";
+    };
+  };
+  systemd.timers.dnsmasq-china-list-update = {
+    timerConfig = {
+      OnCalendar = "*-*-* 05:10:00";
+      Unit = "dnsmasq-china-list-update.service";
+    };
+    wantedBy = [ "timers.target" ];
+  };
+  systemd.services.chnroutes2-update = {
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.nodejs_24}/bin/node ${./update-chnroutes2.ts}";
+      ExecStartPost = "${pkgs.nftables}/bin/nft -f /tmp/chnroutes2.nft";
+    };
+  };
+  systemd.timers.chnroutes2-update = {
+    timerConfig = {
+      OnCalendar = "*-*-* 05:05:00";
+      Unit = "chnroutes2-update.service";
+    };
+    wantedBy = [ "timers.target" ];
   };
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   time.timeZone = "Asia/Shanghai";

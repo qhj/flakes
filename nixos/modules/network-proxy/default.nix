@@ -32,6 +32,10 @@
         '';
         ruleset = ''
           table ip tp {
+              set cn_v4 {
+                  type ipv4_addr
+                  flags interval
+              }
               set ipv4_list {
                   type ipv4_addr
                   flags constant, interval
@@ -56,8 +60,9 @@
 
               chain prerouting {
                   type filter hook prerouting priority mangle;
-                  meta l4proto { tcp, udp } th dport 53 tproxy to 127.0.0.1:12345 meta mark set ${mark} accept
+                  # meta l4proto { tcp, udp } th dport 53 tproxy to 127.0.0.1:12345 meta mark set ${mark} accept
                   ip daddr @ipv4_list accept
+                  ip daddr @cn_v4 accept
                   meta l4proto { tcp, udp } tproxy to 127.0.0.1:12345 meta mark set ${mark} accept
               }
 
@@ -65,11 +70,12 @@
                   type route hook output priority mangle;
                   meta skuid ${singBoxUser} accept
                   # direct to api.netbird.io
-                  meta skuid ${netbirdClientUser} meta nftrace set 1 accept;
+                  meta skuid ${netbirdClientUser} accept;
                   # needed for network routes
                   mark ${netbirdMark} accept
-                  meta l4proto { tcp, udp } th dport 53 meta mark set ${mark} accept
+                  # meta l4proto { tcp, udp } th dport 53 meta mark set ${mark} accept
                   ip daddr @ipv4_list accept
+                  ip daddr @cn_v4 accept
                   meta l4proto { tcp, udp } meta mark set ${mark} accept
               }
           }
