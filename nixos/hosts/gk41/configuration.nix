@@ -263,6 +263,9 @@ in
     wantedBy = [ "timers.target" ];
   };
   systemd.services.chnroutes2-update = {
+    after = [ "sing-box.service" ];
+    wants = [ "sing-box.service" ];
+    wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${pkgs.nodejs_24}/bin/node ${./update-chnroutes2.ts}";
