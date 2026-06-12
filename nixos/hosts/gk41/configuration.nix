@@ -22,6 +22,7 @@ in
     ../../modules/network-proxy
     ../../modules/sing-box
     ../../modules/fish.nix
+    ../../modules/mdns.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -326,4 +327,5 @@ in
     wantedBy = [ "timers.target" ];
   };
   network-proxy.enable = true;
+  qhj.mdns.enable = true;
 }

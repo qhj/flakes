@@ -17,6 +17,7 @@ in
     ./pocket-id.nix
     ../../modules/fish.nix
     ./vaultwarden.nix
+    ../../modules/mdns.nix
   ];
 
   system.stateVersion = "22.11";
@@ -107,4 +108,5 @@ in
       generateKey = true;
     };
   };
+  qhj.mdns.enable = true;
 }

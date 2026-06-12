@@ -19,6 +19,7 @@
     (import ../../modules/niri { inherit inputs; })
     (import ./dev-container.nix { inherit outputs; })
     ../../modules/fish.nix
+    ../../modules/mdns.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -385,4 +386,5 @@
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_STATE_HOME = "$HOME/.local/state";
   };
+  qhj.mdns.enable = true;
 }
