@@ -60,7 +60,6 @@ in
             };
             script = pkgs.writeShellScript "sing-box-pre-start" ''
               ${genconf}/bin/genconf -u ${cfg.subscriptionUrlFile} -i ${cfg.ipFile} -o /run/sing-box/config.json
-              # chown --reference=/run/sing-box /run/sing-box/config.json
             '';
           in
           "${script}";

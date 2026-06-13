@@ -3,6 +3,11 @@
 
 {
   containers.dev = {
+    bindMounts.projects = {
+      hostPath = "/home/qhj/Projects";
+      mountPoint = "/home/qhj/Projects";
+      isReadOnly = false;
+    };
     config =
       {
         pkgs,
