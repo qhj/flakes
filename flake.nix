@@ -112,10 +112,15 @@
           lua-language-server
           nodejs_24
           typescript
-          typescript-language-server
           bun
           biome
-          vscode-json-languageserver
+          (vscode-with-extensions.override {
+            vscode = vscodium;
+            vscodeExtensions = with vscode-extensions; [
+              jnoortheen.nix-ide
+              biomejs.biome
+            ];
+          })
         ];
         shellHook = ''
           export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
@@ -128,8 +133,8 @@
         tx = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./nixos/hosts/tx/configuration.nix
-            ./nixos/modules/man-cache.nix
+            ./hosts/tx/configuration.nix
+            ./modules/man-cache.nix
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
@@ -142,7 +147,7 @@
         gk41 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./nixos/hosts/gk41/configuration.nix
+            ./hosts/gk41/configuration.nix
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
@@ -155,8 +160,8 @@
         ser8 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./nixos/hosts/ser8/configuration.nix
-            ./nixos/modules/man-cache.nix
+            ./hosts/ser8/configuration.nix
+            ./modules/man-cache.nix
             sops-nix.nixosModules.sops
             {
               nixpkgs.overlays = with self.overlays; [
@@ -170,7 +175,7 @@
         ms10 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./nixos/hosts/ms10/configuration.nix
+            ./hosts/ms10/configuration.nix
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
@@ -183,7 +188,7 @@
         lh0 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./nixos/hosts/lh0/configuration.nix
+            ./hosts/lh0/configuration.nix
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
