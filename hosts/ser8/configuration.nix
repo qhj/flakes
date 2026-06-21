@@ -10,9 +10,6 @@
   ...
 }:
 
-let
-  secrets-path = toString inputs.secrets;
-in
 {
   imports = [
     # Include the results of the hardware scan.
@@ -189,7 +186,7 @@ in
   nix.settings.experimental-features = "nix-command flakes";
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   sops = {
-    defaultSopsFile = "${secrets-path}/ser8.yaml";
+    defaultSopsFile = ../../ser8.yaml;
     age.keyFile = "/var/lib/sops-nix/key.txt";
   };
   sops.secrets."dae/subscription" = {

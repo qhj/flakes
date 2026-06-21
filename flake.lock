@@ -164,7 +164,6 @@
         "lanzaboote": "lanzaboote",
         "nixpkgs": "nixpkgs",
         "noctalia": "noctalia",
-        "secrets": "secrets",
         "sops-nix": "sops-nix"
       }
     },
@@ -187,24 +186,6 @@
         "owner": "oxalica",
         "repo": "rust-overlay",
         "type": "github"
-      }
-    },
-    "secrets": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1782025274,
-        "narHash": "sha256-2rbwUvDy8BBjmLdxzeI6AjXmS7FUKAsKucQpImsrK/k=",
-        "ref": "main",
-        "rev": "e85a26cbfdd4a1e48f1586ccc6a0b877e386c9ae",
-        "shallow": true,
-        "type": "git",
-        "url": "ssh://git@github.com/qhj/no-secrets-here.git"
-      },
-      "original": {
-        "ref": "main",
-        "shallow": true,
-        "type": "git",
-        "url": "ssh://git@github.com/qhj/no-secrets-here.git"
       }
     },
     "sops-nix": {

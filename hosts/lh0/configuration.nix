@@ -1,14 +1,10 @@
 {
-  inputs,
   pkgs,
   config,
   lib,
   ...
 }:
 
-let
-  secrets-path = toString inputs.secrets;
-in
 {
   imports = [
     ./hardware-configuration.nix
@@ -56,11 +52,11 @@ in
   ];
 
   sops = {
-    defaultSopsFile = "${secrets-path}/frp.yaml";
+    defaultSopsFile = ../../frp.yaml;
     secrets = {
       frpAuthToken = {
         format = "yaml";
-        sopsFile = "${secrets-path}/frp.yaml";
+        sopsFile = ../../frp.yaml;
       };
     };
     age = {

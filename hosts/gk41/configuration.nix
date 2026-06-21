@@ -3,19 +3,17 @@
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
 {
-  inputs,
   config,
   pkgs,
   lib,
   ...
 }:
 
-let
-  secrets-path = toString inputs.secrets;
-  secrets = import inputs.secrets;
-in
 {
-  disabledModules = [ "services/networking/sing-box.nix" ];
+  disabledModules = [
+    "services/networking/sing-box.nix"
+    "services/networking/pppd.nix"
+  ];
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -23,6 +21,7 @@ in
     ../../modules/sing-box
     ../../modules/fish.nix
     ../../modules/mdns.nix
+    ./pppd.nix
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -193,7 +192,7 @@ in
   ];
 
   sops = {
-    defaultSopsFile = "${secrets-path}/gk41.yaml";
+    defaultSopsFile = ../../gk41.yaml;
     age = {
       sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
       keyFile = "/var/lib/sops-nix/key.txt";
@@ -201,35 +200,42 @@ in
     };
   };
 
+  sops.secrets."pppoe/username" = {
+    mode = "0400";
+  };
   sops.secrets."pppoe/password" = {
     mode = "0400";
   };
   sops.templates.pppoe-pap-secrets = {
     content = ''
-      ${secrets.pppoe.username} * ${config.sops.placeholder."pppoe/password"}
+      ${config.sops.placeholder."pppoe/username"} * ${config.sops.placeholder."pppoe/password"}
     '';
     mode = "0400";
   };
-  environment.etc."ppp/pap-secrets".source = config.sops.templates.pppoe-pap-secrets.path;
+  sops.templates.pppoe-config = {
+    content = ''
+      plugin pppoe.so
+      enp2s0
+      name "${config.sops.placeholder."pppoe/username"}"
+      persist
+      defaultroute
+      noauth
+      # eliminate `Failed to create /etc/ppp/resolv.conf: Read-only file system` error
+      #usepeerdns
+      # or
+      #noresolvconf
+    '';
+    mode = "0400";
+  };
 
+  environment.etc."ppp/pap-secrets".source = config.sops.templates.pppoe-pap-secrets.path;
   services.pppd = {
     enable = true;
     peers = {
       provider = {
         autostart = true;
         enable = true;
-        config = ''
-          plugin pppoe.so
-          enp2s0
-          name "${secrets.pppoe.username}"
-          persist
-          defaultroute
-          noauth
-          # eliminate `Failed to create /etc/ppp/resolv.conf: Read-only file system` error
-          #usepeerdns
-          # or
-          #noresolvconf
-        '';
+        configFile = config.sops.templates.pppoe-config.path;
       };
     };
   };
