@@ -90,7 +90,7 @@ in
     };
     systemd.timers.sing-box-restart = {
       timerConfig = {
-        OnCalendar = "*:0/15";
+        OnCalendar = "*-*-* 04:00:00";
         Unit = "sing-box-restart.service";
       };
       wantedBy = [ "timers.target" ];
