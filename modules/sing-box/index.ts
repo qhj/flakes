@@ -3,6 +3,31 @@ import { readFile, writeFile } from 'node:fs/promises'
 import https from 'node:https'
 import { parseArgs } from 'node:util'
 
+function get(ip: string, hostname: string, pathname: string) {
+  const { promise, resolve, reject } = Promise.withResolvers<string>()
+  const req = https.request(
+    {
+      hostname: ip,
+      port: 443,
+      path: pathname,
+      method: 'GET',
+      headers: {
+        Host: hostname,
+      },
+    },
+    (res) => {
+      let data = ''
+      res.setEncoding('utf8')
+      res.on('data', (chunk) => (data += chunk))
+      res.on('end', () => resolve(data))
+    },
+  )
+  req.on('error', reject)
+  req.end()
+
+  return promise
+}
+
 const {
   values: {
     'url-file': urlFile,
@@ -32,94 +57,75 @@ if (!urlFile || !outputFile || !ipsFile) {
 }
 
 const url = (await readFile(urlFile, { encoding: 'utf8' })).trim()
-const directIps = (await readFile(ipsFile, { encoding: 'utf8' }))
-  .trim()
-  .split(/[\s,]+/)
 
-const { hostname, pathname, search } = new URL(url)
+const [prefix] = url.split('.json')
+if (!prefix) {
+  console.error('invalid url')
+  process.exit(1)
+}
+
+const { hostname } = new URL(url)
 const resolver = new Resolver()
 resolver.setServers(['223.5.5.5'])
 const address = await resolver.resolve4(hostname)
 const ip = address[0]
-const { promise, resolve, reject } = Promise.withResolvers<string>()
-const req = https.request(
-  {
-    hostname: ip,
-    port: 443,
-    path: pathname + search,
-    method: 'GET',
-    headers: {
-      Host: hostname,
-    },
-  },
-  (res) => {
-    let data = ''
-    res.on('data', (chunk) => (data += chunk))
-    res.on('end', () => resolve(data))
-  },
+
+if (!ip) {
+  console.error('filter query dns record')
+  process.exit(1)
+}
+
+const directIps = (await readFile(ipsFile, { encoding: 'utf8' }))
+  .trim()
+  .split(/[\s,]+/)
+
+const urls = [url]
+urls.push(
+  ...Array.from({ length: 5 }).map((_, i) => {
+    return `${prefix + (i + 2)}.json`
+  }),
 )
-req.on('error', reject)
-req.end()
 
-const base64 = await promise
-const nodes: (
-  | {
-      tag: string
-      type: 'vmess'
-      server: string
-      server_port: number
-      uuid: string
-      alter_id: number
-    }
-  | {
-      tag: string
-      type: 'shadowsocks'
-      server: string
-      server_port: number
-      method: string
-      password: string
-    }
-)[] = []
+const list = await Promise.all(
+  urls.map((u) => {
+    const { pathname } = new URL(u)
+    return get(ip, hostname, pathname)
+  }),
+)
 
-atob(base64)
-  .split('\n')
-  .forEach((s) => {
-    const url = new URL(s)
-    const type = url.protocol.replace(':', '')
-    const config = atob(url.host)
-    if (type === 'vmess') {
-      const { ps, port, id, aid, add } = JSON.parse(config) as {
-        ps: string
-        port: string
-        id: string
-        aid: number
-        net: string
-        type: string
-        tls: string
-        add: string
+const outboundsByRegion = list.reduce((acc, jsonStr) => {
+  const config = JSON.parse(jsonStr) as {
+    outbounds: { type: string; tag: string }[]
+  }
+  const outbounds = config.outbounds.filter(
+    ({ type }) =>
+      type !== 'selector' &&
+      type !== 'urltest' &&
+      type !== 'block' &&
+      type !== 'direct',
+  )
+
+  outbounds.forEach((o) => {
+    const index = o.tag.lastIndexOf(' ')
+    if (index !== -1) {
+      const region = o.tag.slice(0, index)
+      const regionOutbounds = acc.get(region)
+      if (regionOutbounds) {
+        regionOutbounds.push(o)
+      } else {
+        acc.set(region, [o])
       }
-      nodes.push({
-        tag: ps,
-        type: 'vmess' as const,
-        server: add,
-        server_port: Number.parseInt(port, 10),
-        uuid: id,
-        alter_id: aid,
-      })
-    }
-    if (type === 'ss') {
-      const arr = config.split(':')
-      const arr2 = arr[1]!.split('@')
-      nodes.push({
-        type: 'shadowsocks' as const,
-        tag: url.hash.replace('#', ''),
-        server: arr2[1]!,
-        server_port: Number.parseInt(arr[2]!, 10),
-        method: arr[0]!,
-        password: arr2[0]!,
-      })
     }
   })
+
+  return acc
+}, new Map<string, object[]>())
+
+const nodes = [...outboundsByRegion].flatMap(([region, outbounds]) => {
+  return outbounds.map((o, i) => {
+    return { ...o, tag: `${region}${(i + 1).toString().padStart(2, '0')}` }
+  })
+})
 
 const tags = nodes.map((i) => i.tag)
 

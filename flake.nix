@@ -122,11 +122,33 @@
             ];
           })
         ];
-        shellHook = ''
-          export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
+        shellHook =
+          with pkgs;
+          let
+            settings = writers.writeJSON "settings.json" {
+              "terminal.integrated.defaultProfile.linux" = "fish";
+              "explorer.compactFolders" = false;
+              "nix.enableLanguageServer" = true;
+              "nix.serverPath" = "nixd";
+              "nix.formatterPath" = "nixfmt";
+              "[nix]" = {
+                "editor.defaultFormatter" = "jnoortheen.nix-ide";
+              };
+              "editor.formatOnSave" = true;
+              "editor.defaultFormatter" = "biomejs.biome";
+              "editor.codeActionsOnSave" = {
+                "source.organizeImports.biome" = "explicit";
+              };
+            };
+          in
+          ''
+            mkdir -p .vscode
+            ln -sf ${settings} .vscode/settings.json
 
-          exec fish
-        '';
+            export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
+
+            exec fish
+          '';
       };
       overlays = import ./overlays;
       nixosConfigurations = {
