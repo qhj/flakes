@@ -194,14 +194,6 @@ const json = JSON.stringify({
         rule_set: ['geosite-cn'],
         server: 'dns-direct',
       },
-      // {
-      //   query_type: [
-      //     "A",
-      //     "AAAA"
-      //   ],
-      //   server: "dns-fakeip",
-      //   rewrite_ttl: 1,
-      // },
     ],
     strategy: 'ipv4_only',
     independent_cache: true,
@@ -254,6 +246,10 @@ const json = JSON.stringify({
       },
       {
         ip_is_private: true,
+        outbound: 'direct',
+      },
+      {
+        domain_suffix: ['cftunnel.com', 'qhj.moe'],
         outbound: 'direct',
       },
       {

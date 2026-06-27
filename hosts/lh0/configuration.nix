@@ -8,7 +8,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./frps.nix
     ../../modules/fish.nix
   ];
 
@@ -51,30 +50,12 @@
     "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
   ];
 
-  sops = {
-    defaultSopsFile = ../../frp.yaml;
-    secrets = {
-      frpAuthToken = {
-        format = "yaml";
-        sopsFile = ../../frp.yaml;
-      };
-    };
-    age = {
-      sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      keyFile = "/var/lib/sops-nix/key.txt";
-      generateKey = true;
-    };
-  };
-
   environment.systemPackages = with pkgs; [
     fastfetch
   ];
 
-  networking.firewall.allowedTCPPorts = [
-    80
-    443
-  ];
-  services.caddy = {
-    enable = true;
-  };
+  # networking.firewall.allowedTCPPorts = [
+  #   80
+  #   443
+  # ];
 }

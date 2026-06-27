@@ -22,8 +22,7 @@
     settings = {
       APP_URL = "https://id.qhj.moe";
       TRUST_PROXY = true;
-      UNIX_SOCKET = "/run/pocket-id/sock";
-      UNIX_SOCKET_MODE = "0660";
+      HOST = "127.0.0.1";
       DB_CONNECTION_STRING = "postgresql://localhost/pocket-id?host=/run/postgresql";
     };
     environmentFile = config.sops.templates.pocketIdEnvfile.path;
@@ -32,6 +31,5 @@
   systemd.services = {
     pocket-id.serviceConfig.RuntimeDirectory = [ "pocket-id" ];
     pocket-id.serviceConfig.RestrictAddressFamilies = [ "AF_UNIX" ];
-    "frp-ms10".serviceConfig.SupplementaryGroups = [ "pocket-id" ];
   };
 }

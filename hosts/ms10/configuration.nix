@@ -8,12 +8,12 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./postgresql.nix
-    ./frpc.nix
-    ./pocket-id.nix
     ../../modules/fish.nix
-    ./vaultwarden.nix
     ../../modules/mdns.nix
+    ./postgresql.nix
+    ./pocket-id.nix
+    ./vaultwarden.nix
+    ./cloudflared.nix
   ];
 
   system.stateVersion = "22.11";
@@ -92,12 +92,6 @@
   };
   sops = {
     defaultSopsFile = ../../ms10.yaml;
-    secrets = {
-      frpAuthToken = {
-        format = "yaml";
-        sopsFile = ../../frp.yaml;
-      };
-    };
     age = {
       sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
       keyFile = "/var/lib/sops-nix/key.txt";
