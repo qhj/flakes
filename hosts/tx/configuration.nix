@@ -196,7 +196,7 @@
     android-tools
     firefoxpwa
     dig
-    bitwarden-desktop
+    # bitwarden-desktop
   ];
   fonts.fontconfig = {
     defaultFonts = {
