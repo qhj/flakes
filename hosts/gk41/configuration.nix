@@ -319,19 +319,6 @@
     interface = "wt0";
     bin.suffix = "";
   };
-  systemd.services.netbird-restart = {
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.systemd}/bin/systemctl restart netbird-client.service";
-    };
-  };
-  systemd.timers.netbird-restart = {
-    timerConfig = {
-      OnCalendar = "*-*-* 02:05:00";
-      Unit = "netbird-restart.service";
-    };
-    wantedBy = [ "timers.target" ];
-  };
   network-proxy.enable = true;
   qhj.mdns.enable = true;
 }

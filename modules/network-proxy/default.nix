@@ -83,6 +83,10 @@
       };
       systemd.network = {
         enable = true;
+        config.networkConfig = {
+          ManageForeignRoutingPolicyRules = false;
+          ManageForeignRoutes = false;
+        };
         networks = {
           "route" = {
             matchConfig.Name = "lo";
