@@ -259,7 +259,10 @@
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${pkgs.nodejs_24}/bin/node ${./update-dnsmasq-china-list.ts}";
-      ExecStartPost = "${pkgs.systemd}/bin/systemctl restart dnsmasq.service";
+      ExecStartPost = [
+        "${pkgs.dnsmasq}/bin/dnsmasq --test --conf-dir=/etc/dnsmasq.d"
+        "${pkgs.systemd}/bin/systemctl restart dnsmasq.service"
+      ];
     };
   };
   systemd.timers.dnsmasq-china-list-update = {
