@@ -162,6 +162,7 @@
         networkConfig = {
           Address = "192.168.77.1/24";
           IPMasquerade = "ipv4";
+          LinkLocalAddressing = "no";
         };
       };
       "60-ppp" = {
@@ -246,14 +247,20 @@
       interface = "br0";
       bind-interfaces = true;
       server = [ "1.1.1.1" ];
-      dhcp-host = "192.168.77.1";
-      dhcp-range = [
-        "192.168.77.2,192.168.77.254,12h"
+      address = [
+        "/gk41.lan/192.168.77.1"
+        "/ms10.lan/192.168.77.2"
       ];
+      dhcp-range = [
+        "192.168.77.128,192.168.77.254,12h"
+      ];
+      local = "/lan/";
+      domain = "lan";
       conf-dir = "/etc/dnsmasq.d";
       log-queries = true;
     };
   };
+  services.resolved.enable = false;
   systemd.tmpfiles.rules = [ "d /etc/dnsmasq.d 0755 root root -" ];
   systemd.services.dnsmasq-china-list-update = {
     serviceConfig = {
