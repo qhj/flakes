@@ -9,7 +9,6 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/fish.nix
-    ../../modules/mdns.nix
     ./postgresql.nix
     ./pocket-id.nix
     ./vaultwarden.nix
@@ -98,5 +97,4 @@
       generateKey = true;
     };
   };
-  qhj.mdns.enable = true;
 }

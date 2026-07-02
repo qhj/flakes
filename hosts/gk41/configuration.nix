@@ -20,7 +20,6 @@
     ../../modules/network-proxy
     ../../modules/sing-box
     ../../modules/fish.nix
-    ../../modules/mdns.nix
     ./pppd.nix
   ];
 
@@ -330,5 +329,4 @@
     bin.suffix = "";
   };
   network-proxy.enable = true;
-  qhj.mdns.enable = true;
 }
