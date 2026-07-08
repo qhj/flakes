@@ -11,14 +11,12 @@
 
 {
   disabledModules = [
-    "services/networking/sing-box.nix"
     "services/networking/pppd.nix"
   ];
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../../modules/network-proxy
-    ../../modules/sing-box
     ../../modules/fish.nix
     ./pppd.nix
   ];
@@ -264,40 +262,6 @@
   };
   services.resolved.enable = false;
   systemd.tmpfiles.rules = [ "d /etc/dnsmasq.d 0755 root root -" ];
-  systemd.services.dnsmasq-china-list-update = {
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.nodejs_24}/bin/node ${./update-dnsmasq-china-list.ts}";
-      ExecStartPost = [
-        "${pkgs.dnsmasq}/bin/dnsmasq --test --conf-dir=/etc/dnsmasq.d"
-        "${pkgs.systemd}/bin/systemctl restart dnsmasq.service"
-      ];
-    };
-  };
-  systemd.timers.dnsmasq-china-list-update = {
-    timerConfig = {
-      OnCalendar = "*-*-* 05:10:00";
-      Unit = "dnsmasq-china-list-update.service";
-    };
-    wantedBy = [ "timers.target" ];
-  };
-  systemd.services.chnroutes2-update = {
-    after = [ "sing-box.service" ];
-    wants = [ "sing-box.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.nodejs_24}/bin/node ${./update-chnroutes2.ts}";
-      ExecStartPost = "${pkgs.nftables}/bin/nft -f /tmp/chnroutes2.nft";
-    };
-  };
-  systemd.timers.chnroutes2-update = {
-    timerConfig = {
-      OnCalendar = "*-*-* 05:05:00";
-      Unit = "chnroutes2-update.service";
-    };
-    wantedBy = [ "timers.target" ];
-  };
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   time.timeZone = "Asia/Shanghai";
   networking.firewall.allowedUDPPorts = [
@@ -331,5 +295,5 @@
     interface = "wt0";
     bin.suffix = "";
   };
-  network-proxy.enable = true;
+  qhj.network-proxy.enable = true;
 }

@@ -29,42 +29,40 @@ function get(ip: string, hostname: string, pathname: string) {
 }
 
 const {
-  values: {
-    'url-file': urlFile,
-    'output-file': outputFile,
-    'ips-file': ipsFile,
-  },
+  values: { 'input-file': inputFile, 'output-file': outputFile },
 } = parseArgs({
   args: process.argv.slice(2),
   options: {
-    'url-file': {
+    'input-file': {
       type: 'string',
-      short: 'u',
+      short: 'i',
     },
     'output-file': {
       type: 'string',
       short: 'o',
     },
-    'ips-file': {
-      type: 'string',
-      short: 'i',
-    },
   },
 })
 
-if (!urlFile || !outputFile || !ipsFile) {
+if (!inputFile || !outputFile) {
   process.exit(1)
 }
 
-const url = (await readFile(urlFile, { encoding: 'utf8' })).trim()
+const input = await readFile(inputFile, { encoding: 'utf8' })
 
-const [prefix] = url.split('.json')
+const { upstream, directIpList, directDomainKeywords } = JSON.parse(input) as {
+  upstream: string
+  directIpList: string[]
+  directDomainKeywords: string[]
+}
+
+const [prefix] = upstream.split('.json')
 if (!prefix) {
   console.error('invalid url')
   process.exit(1)
 }
 
-const { hostname } = new URL(url)
+const { hostname } = new URL(upstream)
 const resolver = new Resolver()
 resolver.setServers(['223.5.5.5'])
 const address = await resolver.resolve4(hostname)
@@ -75,11 +73,7 @@ if (!ip) {
   process.exit(1)
 }
 
-const directIps = (await readFile(ipsFile, { encoding: 'utf8' }))
-  .trim()
-  .split(/[\s,]+/)
-
-const urls = [url]
+const urls = [upstream]
 urls.push(
   ...Array.from({ length: 5 }).map((_, i) => {
     return `${prefix + (i + 2)}.json`
@@ -150,8 +144,6 @@ const outbounds = [
   ...nodes,
 ]
 
-const directDomains = ['cftunnel.com', 'qhj.moe']
-
 const json = JSON.stringify({
   log: {
     level: 'info',
@@ -172,7 +164,7 @@ const json = JSON.stringify({
     ],
     rules: [
       {
-        domain: directDomains,
+        domain: directDomainKeywords,
         server: 'dns-direct',
       },
       {
@@ -226,10 +218,10 @@ const json = JSON.stringify({
     },
     final: 'select',
     rules: [
-      ...(directIps && directIps.length > 0
+      ...(directIpList && directIpList.length > 0
         ? [
             {
-              ip_cidr: directIps,
+              ip_cidr: directIpList,
               outbound: 'direct',
             },
           ]
@@ -255,7 +247,7 @@ const json = JSON.stringify({
         outbound: 'direct',
       },
       {
-        domain_suffix: directDomains,
+        domain_keyword: directDomainKeywords,
         outbound: 'direct',
       },
       {

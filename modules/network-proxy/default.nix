@@ -1,10 +1,15 @@
-{ lib, config, ... }:
 {
-  options.network-proxy = {
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+  options.qhj.network-proxy = {
     enable = lib.mkEnableOption "";
   };
 
-  config = lib.mkIf config.network-proxy.enable (
+  config = lib.mkIf config.qhj.network-proxy.enable (
     let
       singBoxUser = config.systemd.services.sing-box.serviceConfig.User;
       netbirdClientUser = config.systemd.services.netbird-client.serviceConfig.User;
@@ -12,12 +17,63 @@
       netbirdMark = "0x1bd00";
     in
     {
-      sops.secrets."sing-box/subscription".owner = "sing-box";
-      sops.secrets."sing-box/ips".owner = "sing-box";
-      services.sing-box = {
-        enable = true;
-        subscriptionUrlFile = config.sops.secrets."sing-box/subscription".path;
-        ipFile = config.sops.secrets."sing-box/ips".path;
+      sops.secrets."sing-box/input-file" = { };
+      services.sing-box.enable = true;
+      systemd.services.sing-box = {
+        preStart = "${pkgs.nodejs_24}/bin/node ${./index.ts} -i ${
+          config.sops.secrets."sing-box/input-file".path
+        } -o /etc/sing-box/config.json";
+        serviceConfig = {
+          ConfigurationDirectoryMode = "0700";
+        };
+      };
+      systemd.services.sing-box-restart = {
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.systemd}/bin/systemctl restart sing-box.service";
+        };
+      };
+      systemd.timers.sing-box-restart = {
+        timerConfig = {
+          OnCalendar = "*-*-* 04:00:00";
+          Unit = "sing-box-restart.service";
+        };
+        wantedBy = [ "timers.target" ];
+      };
+      systemd.services.dnsmasq-china-list-update = {
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.nodejs_24}/bin/node ${./update-dnsmasq-china-list.ts}";
+          ExecStartPost = [
+            "${pkgs.dnsmasq}/bin/dnsmasq --test --conf-dir=/etc/dnsmasq.d"
+            "${pkgs.systemd}/bin/systemctl restart dnsmasq.service"
+          ];
+        };
+      };
+      systemd.timers.dnsmasq-china-list-update = {
+        timerConfig = {
+          OnCalendar = "*-*-* 05:10:00";
+          Unit = "dnsmasq-china-list-update.service";
+        };
+        wantedBy = [ "timers.target" ];
+      };
+      # after sing-box restart or at 05:05:00
+      systemd.services.chnroutes2-update = {
+        after = [ "sing-box.service" ];
+        wants = [ "sing-box.service" ];
+        wantedBy = [ "multi-user.target" ];
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.nodejs_24}/bin/node ${./update-chnroutes2.ts}";
+          ExecStartPost = "${pkgs.nftables}/bin/nft -f /tmp/chnroutes2.nft";
+        };
+      };
+      systemd.timers.chnroutes2-update = {
+        timerConfig = {
+          OnCalendar = "*-*-* 05:05:00";
+          Unit = "chnroutes2-update.service";
+        };
+        wantedBy = [ "timers.target" ];
       };
       networking.firewall = {
         extraReversePathFilterRules = "meta skuid ${singBoxUser} accept";
