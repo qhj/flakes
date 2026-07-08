@@ -164,7 +164,7 @@ const json = JSON.stringify({
     ],
     rules: [
       {
-        domain: directDomainKeywords,
+        domain_keyword: directDomainKeywords,
         server: 'dns-direct',
       },
       {
