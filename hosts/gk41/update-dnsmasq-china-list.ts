@@ -15,7 +15,7 @@ await Promise.all(
       `/etc/dnsmasq.d/${f}`,
       (await (await fetch(prefix + f)).text()).replaceAll(
         '114.114.114.114',
-        '223.5.5.5',
+        '223.6.6.6',
       ),
     ),
   ),

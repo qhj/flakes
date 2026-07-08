@@ -150,6 +150,8 @@ const outbounds = [
   ...nodes,
 ]
 
+const directDomains = ['cftunnel.com', 'qhj.moe']
+
 const json = JSON.stringify({
   log: {
     level: 'info',
@@ -169,6 +171,10 @@ const json = JSON.stringify({
       },
     ],
     rules: [
+      {
+        domain: directDomains,
+        server: 'dns-direct',
+      },
       {
         type: 'logical',
         mode: 'or',
@@ -249,7 +255,7 @@ const json = JSON.stringify({
         outbound: 'direct',
       },
       {
-        domain_suffix: ['cftunnel.com', 'qhj.moe'],
+        domain_suffix: directDomains,
         outbound: 'direct',
       },
       {
