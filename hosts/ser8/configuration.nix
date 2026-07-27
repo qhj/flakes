@@ -63,6 +63,7 @@
     file
     noto-fonts-cjk-serif
     noto-fonts-cjk-sans
+    fantasque-sans-mono
     telegram-desktop
     moonlight-qt
     wl-clipboard
@@ -75,6 +76,10 @@
       ];
       sansSerif = [
         "Noto Sans CJK SC"
+      ];
+      monospace = [
+        "Fantasque Sans Mono"
+        "Noto Sans Mono CJK SC"
       ];
     };
   };

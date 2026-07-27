@@ -28,7 +28,6 @@
   networking.networkmanager.enable = true;
   time.timeZone = "Asia/Shanghai";
   programs.firefox.enable = true;
-  programs.firefox.nativeMessagingHosts.packages = [ pkgs.firefoxpwa ];
   programs.firefox.preferences = {
     "browser.tabs.inTitlebar" = 0;
     "ui.key.menuAccessKeyFocuses" = false;
@@ -84,7 +83,6 @@
     ghostty
     obs-studio
     android-tools
-    firefoxpwa
     dig
     # bitwarden-desktop
   ];
@@ -98,6 +96,7 @@
       ];
       monospace = [
         "Fantasque Sans Mono"
+        "Noto Sans Mono CJK SC"
       ];
     };
   };
