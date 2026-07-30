@@ -86,6 +86,15 @@
     ];
   };
 
+  fileSystems."/music" = {
+    device = "/dev/disk/by-uuid/f23ec2c5-dda2-4426-bc32-b29f62fc4cac";
+    fsType = "btrfs";
+    options = [
+      "subvol=@music"
+      "compress-force=zstd:1"
+    ];
+  };
+
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

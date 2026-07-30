@@ -97,4 +97,12 @@
       generateKey = true;
     };
   };
+  services.navidrome = {
+    enable = true;
+    settings = {
+      MusicFolder = "/music";
+      Address = "192.168.77.2";
+    };
+    openFirewall = true;
+  };
 }
