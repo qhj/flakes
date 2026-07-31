@@ -105,4 +105,14 @@
     };
     openFirewall = true;
   };
+  services.caddy = {
+    enable = true;
+    virtualHosts."http://feishin.ms10.lan".extraConfig = ''
+      root ${pkgs.feishin-web}
+      file_server
+    '';
+  };
+  networking.firewall.allowedTCPPorts = [
+    80
+  ];
 }
