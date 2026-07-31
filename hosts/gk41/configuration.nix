@@ -138,7 +138,10 @@
   services.dnsmasq = {
     enable = true;
     settings = {
-      interface = "br0";
+      interface = [
+        "br0"
+        "wt0"
+      ];
       bind-interfaces = true;
       server = [ "1.1.1.1" ];
       address = [
