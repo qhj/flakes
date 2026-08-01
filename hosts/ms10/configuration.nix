@@ -107,10 +107,20 @@
   };
   services.caddy = {
     enable = true;
-    virtualHosts."http://feishin.ms10.lan".extraConfig = ''
-      root ${pkgs.feishin-web}
-      file_server
-    '';
+    virtualHosts."http://feishin.ms10.lan".extraConfig =
+      let
+        feishin-web = pkgs.feishin-web.overrideAttrs (old: {
+          postPatch = (old.postPatch or "") + ''
+            substituteInPlace src/renderer/themes/use-app-theme.ts \
+              --replace-warn '"Noto Sans JP", "Noto Sans Hebrew"' \
+                             '"Noto Sans Hebrew"'
+          '';
+        });
+      in
+      ''
+        root ${feishin-web}
+        file_server
+      '';
   };
   networking.firewall.allowedTCPPorts = [
     80
