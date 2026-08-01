@@ -143,7 +143,10 @@
         "wt0"
       ];
       bind-interfaces = true;
-      server = [ "1.1.1.1" ];
+      server = [
+        "1.1.1.1"
+        "/netbird.cloud/127.0.0.153#5053"
+      ];
       address = [
         "/gk41.lan/192.168.77.1"
         "/ms10.lan/192.168.77.2"
@@ -192,6 +195,9 @@
     name = "client";
     interface = "wt0";
     bin.suffix = "";
+    dns-resolver.address = "127.0.0.153";
+    dns-resolver.port = 5053;
+    config.DisableDNS = true;
   };
   qhj.network-proxy.enable = true;
 }
