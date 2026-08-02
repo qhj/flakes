@@ -71,6 +71,8 @@
     ddcutil
     gpu-screen-recorder
     xwayland-satellite
+    playerctl
+    python3
   ];
   hardware.i2c.enable = true;
 
