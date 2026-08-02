@@ -1,10 +1,13 @@
-{ inputs }:
+{ inputs, lib }:
 {
   pkgs,
   ...
 }:
 
 {
+  imports = [
+    inputs.noctalia.nixosModules.default
+  ];
   programs.niri.enable = true;
   # place `include "/etc/niri/config.kdl"` in ~/.config/niri/config.kdl like:
   # include "/etc/niri/config.kdl"
@@ -22,40 +25,51 @@
   environment.etc."niri/extra.kdl".source = pkgs.replaceVars ./extra.kdl {
     polkit-kde-agent-1 = pkgs.kdePackages.polkit-kde-agent-1;
   };
-  environment.systemPackages = with pkgs; [
-    (
+  environment.etc."noctalia/config.toml".source = pkgs.replaceVars ./noctalia-config.toml {
+    sync-theme-mode =
       let
-        noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      in
-      # add gsettings-desktop-schemas to XDG_DATA_DIRS
-      noctalia.overrideAttrs (oldAttrs: {
-        nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [
-          pkgs.wrapGAppsHook3
-        ];
-        # https://nixos.org/manual/nixpkgs/stable/#ssec-gnome-common-issues-double-wrapped
-        dontWrapGApps = true;
-        preFixup = (oldAttrs.preFixup or [ ]) + ''
-          qtWrapperArgs+=("''${gappsWrapperArgs[@]}")
-        '';
-      })
-    )
-    (writeShellApplication {
-      # place `auto-dark "$1"` in noctalia shell **Theme changed** hook
-      name = "auto-dark";
-      runtimeInputs = [ glib ];
-      text = ''
-        gsettings set org.gnome.desktop.interface color-scheme "$([ "$1" = true ] && printf 'prefer-dark' || printf 'prefer-light')"
+        sync-theme-mode = pkgs.writeShellApplication {
+          name = "sync-theme-mode";
+          runtimeInputs = with pkgs; [
+            glib
+            kdePackages.plasma-workspace
+          ];
+          text = ''
+            mode="''${NOCTALIA_THEME_MODE:-}"
 
-        # needed for some apps like Remmina
-        gsettings set org.gnome.desktop.interface gtk-theme "$([ "$1" == true ] && printf 'Adwaita-dark' || printf 'Adwaita')"
-        gsettings set org.gnome.desktop.interface icon-theme "$([ "$1" == true ] && printf 'breeze-dark' || printf 'breeze')"
-      '';
-    })
+            if [[ -z "$mode" ]]; then
+              mode="$(noctalia msg theme-mode-get)"
+            fi
+
+            case "$mode" in
+              dark)
+                kde_scheme="BreezeDark"
+                color_scheme="prefer-dark"
+                gtk_theme="Breeze-Dark"
+                ;;
+              light)
+                kde_scheme="BreezeLight"
+                color_scheme="prefer-light"
+                gtk_theme="Breeze"
+                ;;
+              *)
+                printf 'Unsupported theme mode: %s\n' "$mode" >&2
+                exit 1
+                ;;
+            esac
+
+            plasma-apply-colorscheme "$kde_scheme"
+            gsettings set org.gnome.desktop.interface color-scheme "$color_scheme"
+            gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
+          '';
+        };
+      in
+      "${sync-theme-mode}/bin/sync-theme-mode";
+  };
+  environment.systemPackages = with pkgs; [
     fastfetch
     ddcutil
     gpu-screen-recorder
-    gnome-themes-extra # Adwaita theme
-    glib # gsettings
     xwayland-satellite
   ];
   hardware.i2c.enable = true;
@@ -70,4 +84,26 @@
     }
   ];
   services.gnome.gcr-ssh-agent.enable = false;
+  programs.noctalia = {
+    enable = true;
+    package =
+      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
+        (oldAttrs: {
+          nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.wrapGAppsNoGuiHook ];
+          buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ pkgs.gsettings-desktop-schemas ];
+          dontWrapGApps = true;
+          postFixup = ''
+            wrapProgram "$out/bin/noctalia" \
+              --prefix PATH : ${
+                lib.makeBinPath [
+                  pkgs.git
+                ]
+              } \
+              "''${gappsWrapperArgs[@]}"
+          '';
+        });
+  };
+  xdg.portal.config = {
+    niri."org.freedesktop.impl.portal.FileChooser" = "kde";
+  };
 }

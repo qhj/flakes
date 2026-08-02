@@ -1,0 +1,109 @@
+[bar.default]
+capsule = true
+capsule_fill = "shadow"
+center = [ "clock" ]
+end = [
+    "group:g1",
+    "tray",
+    "cat",
+    "recorder",
+    "clipboard",
+    "network",
+    "bluetooth",
+    "volume",
+    "brightness",
+    "battery",
+    "theme_mode",
+    "notifications",
+    "control-center"
+]
+margin_ends = 0
+padding = 8
+radius = 0
+start = [ "launcher", "wallpaper", "workspaces", "media" ]
+
+[[bar.default.capsule_group]]
+enabled = true
+id = "g1"
+members = [ "cpu", "temp", "ram", "network_rx", "network_tx" ]
+
+[brightness]
+enable_ddcutil = true
+
+[hooks]
+started = "@sync-theme-mode@"
+theme_mode_changed = "@sync-theme-mode@"
+
+[location]
+address = "南沙区"
+
+[plugins]
+enabled = [ "dotnetrob/cat", "noctalia/screen_recorder" ]
+
+[shell.panel]
+open_near_click_control_center = true
+
+[[shell.session.actions]]
+action = "lock"
+shortcut = "1"
+
+[[shell.session.actions]]
+action = "logout"
+shortcut = "2"
+
+[[shell.session.actions]]
+action = "lock_and_suspend"
+shortcut = "3"
+
+[[shell.session.actions]]
+action = "reboot"
+shortcut = "4"
+
+[[shell.session.actions]]
+action = "shutdown"
+shortcut = "5"
+
+[[shell.session.actions]]
+action = "command"
+label = "Windows"
+glyph = "brand-windows"
+command = "systemctl reboot --boot-loader-entry=auto-windows"
+shortcut = "6"
+
+[theme]
+builtin = "Nord"
+mode = "auto"
+
+[widget.cat]
+type = "dotnetrob/cat:cat"
+
+[widget.clock]
+format = "%F %T"
+
+[widget.cpu]
+visualization = "none"
+
+[widget.launcher]
+glyph = "snowflake"
+
+[widget.network_rx]
+label_min_width = 44
+network_speed_compact = true
+visualization = "none"
+
+[widget.network_tx]
+label_min_width = 44
+network_speed_compact = true
+visualization = "none"
+
+[widget.ram]
+visualization = "none"
+
+[widget.recorder]
+type = "noctalia/screen_recorder:recorder"
+
+[widget.temp]
+visualization = "none"
+
+[widget.wallpaper]
+enabled = false
