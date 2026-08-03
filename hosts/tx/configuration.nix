@@ -69,9 +69,6 @@
     tree
     git
     bat
-    noto-fonts-cjk-serif
-    noto-fonts-cjk-sans
-    fantasque-sans-mono
     telegram-desktop
     wl-clipboard
     waydroid-script
@@ -84,7 +81,12 @@
     obs-studio
     android-tools
     dig
-    # bitwarden-desktop
+    flameshot
+  ];
+  fonts.packages = with pkgs; [
+    noto-fonts-cjk-sans-static
+    noto-fonts-cjk-serif-static
+    fantasque-sans-mono
   ];
   fonts.fontconfig = {
     defaultFonts = {
