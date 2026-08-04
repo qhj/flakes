@@ -14,6 +14,7 @@
     (import ../../modules/niri { inherit inputs lib; })
     (import ./dev-container.nix { inherit outputs; })
     ../../modules/fish.nix
+    ../../modules/sunshine.nix
   ];
 
   system.stateVersion = "24.11";
@@ -195,7 +196,6 @@
 
   services.udev.packages = with pkgs; [
     canokeys-udev-rules
-    sunshine
   ];
   programs.ssh = {
     startAgent = true;
@@ -212,53 +212,6 @@
   networking.interfaces.enp9s0.wakeOnLan = {
     enable = true;
   };
-
-  networking.firewall =
-    let
-      generatePorts = port: offsets: map (offset: port + offset) offsets;
-      defaultPort = 47989;
-    in
-    {
-      allowedTCPPorts = generatePorts defaultPort [
-        (-5)
-        0
-        1
-        21
-      ];
-      allowedUDPPorts = generatePorts defaultPort [
-        9
-        10
-        11
-        13
-        21
-      ];
-    };
-  boot.kernelModules = [ "uinput" ];
-  services.avahi = {
-    enable = lib.mkDefault true;
-    publish = {
-      enable = lib.mkDefault true;
-    };
-  };
-  systemd.services.sunshine = {
-    description = "Self-hosted game stream host for Moonlight";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network-online.target" ];
-    wants = [ "network-online.target" ];
-
-    serviceConfig = {
-      ExecStart = "${pkgs.sunshine}/bin/sunshine";
-      Restart = "on-failure";
-      RestartSec = "5s";
-    };
-  };
-
-  # services.sunshine = {
-  #   enable = true;
-  #   autoStart = true;
-  #   openFirewall = true;
-  #   capSysAdmin = true;
-  # };
 
   virtualisation.podman.enable = true;
   i18n.extraLocaleSettings = {
@@ -279,4 +232,6 @@
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_STATE_HOME = "$HOME/.local/state";
   };
+
+  qhj.sunshine.enable = true;
 }
