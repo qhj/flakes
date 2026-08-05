@@ -46,7 +46,7 @@ karaoke_enabled = false
 scroll_mode = "static"
 
 [plugins]
-enabled = [ "noctalia/screen_recorder", "dotnetrob/cat", "h465855hgg/lyrics" ]
+enabled = [ "noctalia/screen_recorder", "noctalia/mpvpaper", "dotnetrob/cat", "h465855hgg/lyrics" ]
 
 [shell.panel]
 open_near_click_control_center = true
@@ -95,6 +95,7 @@ visualization = "none"
 glyph = "snowflake"
 
 [widget.lyrics]
+hide_when_no_lyrics = true
 show_cover = false
 show_glyph = false
 type = "h465855hgg/lyrics:lyrics"

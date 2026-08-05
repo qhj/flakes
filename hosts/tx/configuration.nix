@@ -83,6 +83,7 @@
     android-tools
     dig
     flameshot
+    mpvpaper
   ];
   fonts.packages = with pkgs; [
     noto-fonts-cjk-sans-static
