@@ -7,6 +7,7 @@ final.symlinkJoin {
   postBuild =
     let
       config = final.writers.writeTOML "helix-config" {
+        theme = "base16_transparent";
         editor = {
           completion-timeout = 5;
           preview-completion-insert = false;
