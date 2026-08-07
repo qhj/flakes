@@ -1,7 +1,6 @@
 keys:
-  - &tx age1za532qy5wjanmn58f6hsg74dnqh99dkv2zepnzmw2j4arvmjxaqq8hfv5s
+  - &admin age1yubikey1qgqec3evdjltx9yuj6fh7g5zyz27pglmxkm8napyu7jfpnwcp4rk22s5hzk
   - &gk41_host age1xse2emp3plfccra6rqmfe4azqysfjpg55ltphxvwj62zc8yx7eqqvuua20
-  - &ser8 age1ldc4d4hlajzr296xt8hj8ud544tsp64achmkm387nz5wwecassesseczcp
   - &ser8_host age1m5hla0nhkl7han9acslvug6uev623cpjwffx0vef20f0gg50vceq2p58ma
   - &ms10_host age1t036a63tqvatlkh6jktyr8fhyp6rntpx4a6pwsgy829jza2zcg2qs26djg
   - &lh0_host age1ye5qdzz8ttvmjnvnjru074vs60nc05d93jrxz2asmtu8wx9n2v4q47nvry
@@ -9,18 +8,15 @@ creation_rules:
   - path_regex: gk41\.yaml$
     key_groups:
     - age:
-      - *tx
-      - *ser8
+      - *admin
       - *gk41_host
   - path_regex: ser8\.yaml$
     key_groups:
     - age:
-      - *tx
-      - *ser8
+      - *admin
       - *ser8_host
   - path_regex: ms10\.yaml$
     key_groups:
     - age:
-      - *tx
-      - *ser8
+      - *admin
       - *ms10_host

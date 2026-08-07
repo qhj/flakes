@@ -235,4 +235,5 @@
   };
 
   qhj.sunshine.enable = true;
+  services.pcscd.enable = true;
 }
