@@ -1,4 +1,4 @@
-{ prev }:
+{ prev, ... }:
 
 prev.sunshine.overrideAttrs (old: {
   patches = (old.patches or [ ]) ++ [

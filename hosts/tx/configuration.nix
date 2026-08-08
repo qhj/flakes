@@ -1,7 +1,6 @@
 {
   pkgs,
   inputs,
-  outputs,
   lib,
   config,
   ...
@@ -12,7 +11,6 @@
     ./hardware-configuration.nix
     ../../modules/lanzaboote.nix
     (import ../../modules/niri { inherit inputs lib; })
-    (import ./dev-container.nix { inherit outputs; })
     ../../modules/fish.nix
     ../../modules/sunshine.nix
   ];

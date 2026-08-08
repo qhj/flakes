@@ -16,7 +16,7 @@
       inherit final prev;
     };
     sunshine = import ./sunshine.nix {
-      inherit prev;
+      inherit final prev;
     };
     libfido2HidOnly = import ./libfido2.nix {
       inherit prev;
