@@ -199,6 +199,9 @@
     canokeys-udev-rules
   ];
   programs.ssh = {
+    package = pkgs.openssh.override {
+      libfido2 = pkgs.libfido2HidOnly;
+    };
     startAgent = true;
     extraConfig = ''
       Host *

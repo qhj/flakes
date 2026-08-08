@@ -18,5 +18,8 @@
     sunshine = import ./sunshine.nix {
       inherit prev;
     };
+    libfido2HidOnly = import ./libfido2.nix {
+      inherit prev;
+    };
   };
 }
