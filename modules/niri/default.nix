@@ -4,11 +4,41 @@
   ...
 }:
 
+let
+  niri-theme-environment = pkgs.writeShellApplication {
+    name = "niri-theme-environment";
+    runtimeInputs = with pkgs; [
+      dbus
+      systemd
+    ];
+    text = ''
+      case "$1" in
+        import)
+          dbus-update-activation-environment --systemd \
+            QT_QPA_PLATFORMTHEME=kde \
+            XDG_MENU_PREFIX=plasma-
+          ;;
+        clear)
+          systemctl --user unset-environment \
+            QT_QPA_PLATFORMTHEME \
+            XDG_MENU_PREFIX
+          dbus-update-activation-environment \
+            QT_QPA_PLATFORMTHEME= \
+            XDG_MENU_PREFIX=
+          ;;
+      esac
+    '';
+  };
+in
 {
   imports = [
     inputs.noctalia.nixosModules.default
   ];
   programs.niri.enable = true;
+  systemd.user.services.niri.serviceConfig = {
+    ExecStartPre = "${niri-theme-environment}/bin/niri-theme-environment import";
+    ExecStopPost = "${niri-theme-environment}/bin/niri-theme-environment clear";
+  };
   # place `include "/etc/niri/config.kdl"` in ~/.config/niri/config.kdl like:
   # include "/etc/niri/config.kdl"
   #
