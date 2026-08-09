@@ -135,6 +135,47 @@ in
           '';
         });
   };
+  # Firefox treats the default theme asymmetrically: a Library window opened in
+  # dark mode gets an explicit "dark" override, while one opened in light mode
+  # gets "none" and keeps following the system. The dark override can become
+  # stale, so keep it in sync with the resolved browser theme.
+  programs.firefox.autoConfig = ''
+    (() => {
+      const updateLibraryTheme = window => {
+        if (
+          window.document.documentElement.getAttribute("windowtype") !==
+          "Places:Organizer"
+        ) {
+          return;
+        }
+
+        const theme = Services.prefs.getIntPref(
+          "browser.theme.toolbar-theme",
+          2
+        );
+        window.browsingContext.prefersColorSchemeOverride =
+          theme === 0 ? "dark" : theme === 1 ? "light" : "none";
+      };
+
+      const updateOpenLibraries = () => {
+        for (const window of Services.wm.getEnumerator("Places:Organizer")) {
+          updateLibraryTheme(window);
+        }
+      };
+
+      Services.prefs.addObserver(
+        "browser.theme.toolbar-theme",
+        updateOpenLibraries
+      );
+      Services.obs.addObserver(window => {
+        window.addEventListener(
+          "load",
+          () => updateLibraryTheme(window),
+          { once: true }
+        );
+      }, "domwindowopened");
+    })();
+  '';
   xdg.portal.config = {
     niri."org.freedesktop.impl.portal.FileChooser" = "kde";
   };
