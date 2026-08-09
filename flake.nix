@@ -110,6 +110,7 @@
           typescript
           bun
           biome
+          codex
           (vscode-with-extensions.override {
             vscode = vscodium;
             vscodeExtensions = with vscode-extensions; [
