@@ -56,6 +56,7 @@ in
     polkit-kde-agent-1 = pkgs.kdePackages.polkit-kde-agent-1;
   };
   environment.etc."noctalia/config.toml".source = pkgs.replaceVars ./noctalia-config.toml {
+    noctalia-plugins-dir = "${./noctalia-plugins}";
     sync-theme-mode =
       let
         sync-theme-mode = pkgs.writeShellApplication {

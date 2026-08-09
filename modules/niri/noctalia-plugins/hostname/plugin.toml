@@ -1,0 +1,9 @@
+id = "local/hostname"
+name = "Hostname"
+version = "1.0.0"
+plugin_api = 3
+author = "local"
+
+[[widget]]
+id = "hostname"
+entry = "hostname.luau"

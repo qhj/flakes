@@ -20,7 +20,7 @@ end = [
 margin_ends = 0
 padding = 8
 radius = 0
-start = [ "launcher", "wallpaper", "workspaces", "media", "lyrics" ]
+start = [ "launcher", "hostname", "wallpaper", "workspaces", "media", "lyrics" ]
 
 [[bar.default.capsule_group]]
 enabled = true
@@ -46,7 +46,22 @@ karaoke_enabled = false
 scroll_mode = "static"
 
 [plugins]
-enabled = [ "noctalia/screen_recorder", "noctalia/mpvpaper", "dotnetrob/cat", "h465855hgg/lyrics" ]
+enabled = [ "noctalia/screen_recorder", "noctalia/mpvpaper", "dotnetrob/cat", "h465855hgg/lyrics", "local/hostname" ]
+
+[[plugins.source]]
+kind = "git"
+location = "https://github.com/noctalia-dev/official-plugins"
+name = "official"
+
+[[plugins.source]]
+kind = "git"
+location = "https://github.com/noctalia-dev/community-plugins"
+name = "community"
+
+[[plugins.source]]
+kind = "path"
+location = "@noctalia-plugins-dir@"
+name = "nixos-local"
 
 [shell.panel]
 open_near_click_control_center = true
@@ -90,6 +105,9 @@ format = "%F %T"
 
 [widget.cpu]
 visualization = "none"
+
+[widget.hostname]
+type = "local/hostname:hostname"
 
 [widget.launcher]
 glyph = "snowflake"
