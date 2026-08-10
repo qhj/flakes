@@ -104,6 +104,7 @@ in
     xwayland-satellite
     playerctl
     python3
+    activate-linux
   ];
   hardware.i2c.enable = true;
 

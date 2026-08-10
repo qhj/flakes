@@ -5,6 +5,7 @@ environment {
 
 spawn-at-startup "noctalia"
 spawn-at-startup "@polkit-kde-agent-1@/libexec/polkit-kde-authentication-agent-1"
+spawn-sh-at-startup "activate-linux -c 0.5-0.5-0.5-0.8 -t '激活 Linux' -m '转到“设置”以激活 Linux。'"
 
 prefer-no-csd
 
