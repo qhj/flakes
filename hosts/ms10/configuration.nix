@@ -8,12 +8,14 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/fish.nix
+    ../../modules/fish
     ./postgresql.nix
     ./pocket-id.nix
     ./vaultwarden.nix
     ./cloudflared.nix
   ];
+
+  qhj.fish.enable = true;
 
   system.stateVersion = "22.11";
 

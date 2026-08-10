@@ -11,8 +11,10 @@
     ./hardware-configuration.nix
     ../../modules/lanzaboote.nix
     (import ../../modules/niri { inherit inputs; })
-    ../../modules/fish.nix
+    ../../modules/fish
   ];
+
+  qhj.fish.enable = true;
 
   system.stateVersion = "24.11";
 

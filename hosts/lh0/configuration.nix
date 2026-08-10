@@ -8,8 +8,10 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/fish.nix
+    ../../modules/fish
   ];
+
+  qhj.fish.enable = true;
 
   system.stateVersion = "22.11";
 

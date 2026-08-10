@@ -12,9 +12,11 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/network-proxy
-    ../../modules/fish.nix
+    ../../modules/fish
     ./pppd.nix
   ];
+
+  qhj.fish.enable = true;
 
   system.stateVersion = "24.11";
 

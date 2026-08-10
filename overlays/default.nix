@@ -12,9 +12,6 @@
     neovim = import ./neovim {
       inherit final prev;
     };
-    fishPlugins = import ./fish-plugins.nix {
-      inherit final prev;
-    };
     sunshine = import ./sunshine.nix {
       inherit final prev;
     };
