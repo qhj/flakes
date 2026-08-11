@@ -9,6 +9,10 @@ spawn-sh-at-startup "activate-linux -c 0.5-0.5-0.5-0.8 -t '激活 Linux' -m '转
 
 prefer-no-csd
 
+debug {
+    honor-xdg-activation-with-invalid-serial
+}
+
 binds {
     Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "ghostty"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn-sh "noctalia msg panel-toggle launcher"; }
