@@ -62,6 +62,8 @@ if (!prefix) {
   process.exit(1)
 }
 
+const directDomainSuffixes = ['steamcontent.com', 'steamserver.net']
+
 const { hostname } = new URL(upstream)
 const resolver = new Resolver()
 resolver.setServers(['223.5.5.5'])
@@ -164,6 +166,10 @@ const json = JSON.stringify({
     ],
     rules: [
       {
+        domain_suffix: directDomainSuffixes,
+        server: 'dns-direct',
+      },
+      {
         domain_keyword: directDomainKeywords,
         server: 'dns-direct',
       },
@@ -244,6 +250,10 @@ const json = JSON.stringify({
       },
       {
         ip_is_private: true,
+        outbound: 'direct',
+      },
+      {
+        domain_suffix: directDomainSuffixes,
         outbound: 'direct',
       },
       {
