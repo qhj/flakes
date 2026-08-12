@@ -62,7 +62,7 @@ if (!prefix) {
   process.exit(1)
 }
 
-const directDomainSuffixes = ['steamcontent.com', 'steamserver.net']
+const directDomainSuffixes = ['steamserver.net']
 
 const { hostname } = new URL(upstream)
 const resolver = new Resolver()
