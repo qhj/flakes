@@ -1,3 +1,4 @@
 result
 node_modules
 .vscode
+.nix
