@@ -32,3 +32,8 @@ gestures {
 window-rule {
     open-maximized-to-edges false
 }
+
+window-rule {
+    match app-id=r#"^steam_app_\d+$"#
+    open-fullscreen true
+}
