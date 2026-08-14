@@ -77,7 +77,7 @@ if (!ip) {
 
 const urls = [upstream]
 urls.push(
-  ...Array.from({ length: 5 }).map((_, i) => {
+  ...Array.from({ length: 3 }).map((_, i) => {
     return `${prefix + (i + 2)}.json`
   }),
 )
