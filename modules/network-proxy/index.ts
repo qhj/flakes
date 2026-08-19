@@ -75,47 +75,33 @@ if (!ip) {
   process.exit(1)
 }
 
-const urls = [upstream]
-urls.push(
-  ...Array.from({ length: 3 }).map((_, i) => {
-    return `${prefix + (i + 2)}.json`
-  }),
+const { pathname } = new URL(upstream)
+const jsonStr = await get(ip, hostname, pathname)
+
+const outboundsByRegion = new Map<string, object[]>()
+const config = JSON.parse(jsonStr) as {
+  outbounds: { type: string; tag: string }[]
+}
+const outboundNodes = config.outbounds.filter(
+  ({ type }) =>
+    type !== 'selector' &&
+    type !== 'urltest' &&
+    type !== 'block' &&
+    type !== 'direct',
 )
 
-const list = await Promise.all(
-  urls.map((u) => {
-    const { pathname } = new URL(u)
-    return get(ip, hostname, pathname)
-  }),
-)
-
-const outboundsByRegion = list.reduce((acc, jsonStr) => {
-  const config = JSON.parse(jsonStr) as {
-    outbounds: { type: string; tag: string }[]
-  }
-  const outbounds = config.outbounds.filter(
-    ({ type }) =>
-      type !== 'selector' &&
-      type !== 'urltest' &&
-      type !== 'block' &&
-      type !== 'direct',
-  )
-
-  outbounds.forEach((o) => {
-    const index = o.tag.lastIndexOf(' ')
-    if (index !== -1) {
-      const region = o.tag.slice(0, index)
-      const regionOutbounds = acc.get(region)
-      if (regionOutbounds) {
-        regionOutbounds.push(o)
-      } else {
-        acc.set(region, [o])
-      }
+outboundNodes.forEach((o) => {
+  const index = o.tag.lastIndexOf(' ')
+  if (index !== -1) {
+    const region = o.tag.slice(0, index)
+    const regionOutbounds = outboundsByRegion.get(region)
+    if (regionOutbounds) {
+      regionOutbounds.push(o)
+    } else {
+      outboundsByRegion.set(region, [o])
     }
-  })
-
-  return acc
-}, new Map<string, object[]>())
+  }
+})
 
 const nodes = [...outboundsByRegion].flatMap(([region, outbounds]) => {
   return outbounds.map((o, i) => {
