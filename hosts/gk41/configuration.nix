@@ -144,7 +144,7 @@
         "br0"
         "wt0"
       ];
-      bind-interfaces = true;
+      bind-dynamic = true;
       server = [
         "1.1.1.1"
         "/netbird.cloud/127.0.0.153#5053"
