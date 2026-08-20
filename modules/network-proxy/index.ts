@@ -103,32 +103,43 @@ outboundNodes.forEach((o) => {
   }
 })
 
-const nodes = [...outboundsByRegion].flatMap(([region, outbounds]) => {
-  return outbounds.map((o, i) => {
-    return { ...o, tag: `${region}${(i + 1).toString().padStart(2, '0')}` }
-  })
-})
+const regions = [...outboundsByRegion].map(([region, outbounds]) => ({
+  tag: region,
+  nodes: outbounds.map((o, i) => ({
+    ...o,
+    tag: `${region}${(i + 1).toString().padStart(2, '0')}`,
+  })),
+}))
 
+const nodes = regions.flatMap(({ nodes }) => nodes)
 const tags = nodes.map((i) => i.tag)
+const regionTags = regions.map(({ tag }) => tag)
 
 const outbounds = [
   {
-    type: 'direct',
     tag: 'direct',
+    type: 'direct',
   },
   {
-    type: 'selector',
     tag: 'select',
-    outbounds: ['auto', ...tags],
+    type: 'selector',
+    outbounds: ['auto', ...regionTags, ...tags],
     interrupt_exist_connections: true,
   },
   {
-    type: 'urltest',
     tag: 'auto',
+    type: 'urltest',
     interval: '3m',
     outbounds: tags,
     interrupt_exist_connections: true,
   },
+  ...regions.map(({ tag, nodes }) => ({
+    tag,
+    type: 'urltest',
+    interval: '3m',
+    outbounds: nodes.map((node) => node.tag),
+    interrupt_exist_connections: true,
+  })),
   ...nodes,
 ]
 
