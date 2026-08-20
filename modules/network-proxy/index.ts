@@ -152,6 +152,10 @@ const json = JSON.stringify({
     ],
     rules: [
       {
+        domain: ['cloudflare-ech.com'],
+        server: 'dns-direct',
+      },
+      {
         domain_suffix: directDomainSuffixes,
         server: 'dns-direct',
       },
@@ -173,12 +177,12 @@ const json = JSON.stringify({
         action: 'reject',
       },
       {
-        clash_mode: 'Global',
-        server: 'dns-proxy',
-      },
-      {
         clash_mode: 'Direct',
         server: 'dns-direct',
+      },
+      {
+        clash_mode: 'Global',
+        server: 'dns-proxy',
       },
       {
         rule_set: ['geosite-cn'],
@@ -264,12 +268,12 @@ const json = JSON.stringify({
         action: 'reject',
       },
       {
-        clash_mode: 'Global',
-        outbound: 'select',
-      },
-      {
         clash_mode: 'Direct',
         outbound: 'direct',
+      },
+      {
+        clash_mode: 'Global',
+        outbound: 'select',
       },
       {
         action: 'resolve',
@@ -317,7 +321,7 @@ const json = JSON.stringify({
       external_controller: '192.168.77.1:9090',
       external_ui: 'ui',
       external_ui_download_url:
-        'https://github.com/MetaCubeX/Yacd-meta/archive/gh-pages.zip',
+        'https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip',
     },
   },
 })
