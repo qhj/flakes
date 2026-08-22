@@ -72,7 +72,6 @@
     bat
     telegram-desktop
     wl-clipboard
-    waydroid-script
     chromium
     moonlight-qt
     # chiaki-ng
@@ -84,6 +83,7 @@
     dig
     flameshot
     mpvpaper
+    waydroid-helper
   ];
   fonts.packages = with pkgs; [
     noto-fonts-cjk-sans-static
@@ -114,7 +114,10 @@
       intel-compute-runtime
     ];
   };
-  virtualisation.waydroid.enable = true;
+  virtualisation.waydroid = {
+    enable = true;
+    package = pkgs.waydroid-nftables;
+  };
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo";
   # services.fprintd.enable = true;
 
