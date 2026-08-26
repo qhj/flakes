@@ -99,8 +99,9 @@
           '';
         };
       };
-      devShells."${system}".default = pkgs.mkShell {
+      devShells."${system}".default = pkgs.mkShellNoCC {
         packages = with pkgs; [
+          bashInteractive
           fish
           git
           nixd
