@@ -10,7 +10,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/lanzaboote.nix
-    (import ../../modules/niri { inherit inputs; })
+    (import ../../modules/niri { inherit inputs lib; })
     ../../modules/fish
   ];
 
