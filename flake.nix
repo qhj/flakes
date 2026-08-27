@@ -144,9 +144,10 @@
             mkdir -p .vscode
             ln -sf ${settings} .vscode/settings.json
 
+            export SHELL=${nixpkgs.lib.getExe fish}
             export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
 
-            exec fish
+            exec "$SHELL"
           '';
       };
       overlays = import ./overlays;
