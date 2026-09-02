@@ -5,6 +5,9 @@ pocketid:
     encryption_key: ENC[AES256_GCM,data:X6AX15zxtX/NRCcM1Jwnq4P1Yuo8z7Oq3plbPh7oxbI6pb0tTh5Zc/190Uk=,iv:ZPFLveboS5CGiXVZYleWa4ymNv0zzmMnGdZH/ObAfwk=,tag:nUj/L83IrYgfiwzBCuK51g==,type:str]
 cftunnel:
     credentials: ENC[AES256_GCM,data:gXRHP+ZZkP8fHd//Kw7pQPHfFQyBA78COJODR8juymh2/QHKXulEmylWdSZKodwtLh9X/g+48J6ysrDZqRfLcWqVvgpV7PWZVjpgM8hhGtrGIeYmBQiHXKxGbdV4p/csMqs2dwCrmc7oHvqg3s1UQQfcIT4Mq1yLdzaVm3KaHDF15zAnFR/DQ7+kNF/2yj8Q7ZzjSuMIsBSbLKhfB90uz/ieWktI2bv5Iasucg+sUA==,iv:E9jOaYJ859TbUTl21LKYOowOgWY+dcpwYvLMpsDWL/A=,tag:qUXQKEEJVdkj2ULi8UDBTg==,type:str]
+miniflux:
+    client_id: ENC[AES256_GCM,data:3SYMgxo7S4GuvSLhalHYEehAJCm3CsriKcnRBfjW7mDlr8ej,iv:WuHi6ZwJySCFrPaeMU1/7/p2aPC98N4hZDu4ueLaXZE=,tag:rPlvRxk3YGYHp7Pf6EpqKQ==,type:str]
+    client_secret: ENC[AES256_GCM,data:EPyYgOX2RtAQBiP1iV2HCA+YrYd23eHGKAbcTN6xDM8=,iv:+p+27RjG3lpxFXM2AhSpKKBWE5acMJf9Iq5Aqjy/GO0=,tag:Bnm7kbPzEGC3TBOxlanXEA==,type:str]
 sops:
     age:
         - enc: |
@@ -26,7 +29,7 @@ sops:
             UzjSbvkQ/jqQFmq0u2PUK7pg9551/CFvHobQCHyaklOByA458K4/7Q==
             -----END AGE ENCRYPTED FILE-----
           recipient: age1t036a63tqvatlkh6jktyr8fhyp6rntpx4a6pwsgy829jza2zcg2qs26djg
-    lastmodified: "2026-06-27T12:12:16Z"
-    mac: ENC[AES256_GCM,data:7tH8nvXl2LreideW4ujJs9x7leMk+SgqV82Nc5TuP0qTb42G0Pon0IDouzzF/C237Pb7SLJdLANd/FA6tjdVuei4HIT0vmJj8P7QY6rH5DmBhFu3ZH3hczHgj3XaPxsI1CkV42PZSL0lgEWfhjjV7ApcagL7yki+PubFGLGuq/s=,iv:dhVEje2o/yMkuGBeLwQfvgJQtuQ3zHgz5t/OHvy58R8=,tag:s2D9ZptsH/oRjOJUIAvxNA==,type:str]
+    lastmodified: "2026-09-02T16:23:14Z"
+    mac: ENC[AES256_GCM,data:tBOgF6PiTArOy5se7ZSVGkxEmvSXR7eE4sySMKQFUfVxPVALbi/E6wLjEqghUZC6VKJNNN0RSFFMsecyh43LR/dvJ+OfupXFQtV+mldeGVwvZiOT9D6xAI1wUP7xoIMOZ3/ynQEt2NO4tgIwMGa75CU+V1Squ6VgL1BPuemUQH8=,iv:m1UquNnBIDuUwv6chTMYL55w/TojbmdOIL70H6ksJBE=,tag:qXwJq84Nl+yvfPzhqAyQmQ==,type:str]
     unencrypted_suffix: _unencrypted
-    version: 3.12.2
+    version: 3.13.3

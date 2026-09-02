@@ -12,6 +12,7 @@
         default = "http_status:404";
         ingress = {
           "id.qhj.moe" = "http://127.0.0.1:1411";
+          "feed.qhj.moe" = "http://127.0.0.1:8080";
           "vw.qhj.moe" = "http://127.0.0.1:8000";
         };
       };

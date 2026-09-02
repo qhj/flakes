@@ -11,6 +11,7 @@
     ../../modules/fish
     ./postgresql.nix
     ./pocket-id.nix
+    ./miniflux.nix
     ./vaultwarden.nix
     ./cloudflared.nix
   ];
