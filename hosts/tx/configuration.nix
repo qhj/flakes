@@ -13,6 +13,7 @@
     (import ../../modules/niri { inherit inputs lib; })
     ../../modules/fish
     ../../modules/sunshine.nix
+    ./maid.nix
   ];
 
   qhj.fish.enable = true;

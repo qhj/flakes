@@ -15,6 +15,7 @@
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-maid.url = "git+https://codeberg.org/viperML/nix-maid";
   };
 
   outputs =
@@ -23,6 +24,7 @@
       nixpkgs,
       lanzaboote,
       sops-nix,
+      nix-maid,
       ...
     }@inputs:
     let
@@ -164,6 +166,7 @@
               ];
             }
             lanzaboote.nixosModules.lanzaboote
+            nix-maid.nixosModules.default
           ];
         };
         gk41 = nixpkgs.lib.nixosSystem {
