@@ -201,7 +201,6 @@ const json = JSON.stringify({
       },
     ],
     strategy: 'ipv4_only',
-    independent_cache: true,
   },
   inbounds: [
     // {
@@ -219,11 +218,6 @@ const json = JSON.stringify({
   ],
   outbounds,
   route: {
-    default_domain_resolver: {
-      server: 'dns-direct',
-      strategy: 'ipv4_only',
-    },
-    final: 'select',
     rules: [
       ...(directIpList && directIpList.length > 0
         ? [
@@ -323,16 +317,37 @@ const json = JSON.stringify({
         url: 'https://ghfast.top/https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/geosite-category-ads-all.srs',
       },
     ],
+    final: 'select',
+    default_domain_resolver: {
+      server: 'dns-direct',
+      strategy: 'ipv4_only',
+    },
+    default_http_client: 'http-client-direct',
   },
+  http_clients: [
+    {
+      tag: 'http-client-direct',
+    },
+  ],
+  services: [
+    {
+      type: 'api',
+      listen: '192.168.77.1',
+      listen_port: 9090,
+      dashboard: {
+        enabled: true,
+        download_url:
+          'https://ghfast.top/https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip',
+      },
+    },
+  ],
   experimental: {
     cache_file: {
       enabled: true,
+      store_dns: true,
     },
     clash_api: {
-      external_controller: '192.168.77.1:9090',
-      external_ui: 'ui',
-      external_ui_download_url:
-        'https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip',
+      external_controller: '192.168.77.1:9091',
     },
   },
 })

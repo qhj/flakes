@@ -78,7 +78,10 @@
       networking.firewall = {
         extraReversePathFilterRules = "meta skuid ${singBoxUser} accept";
         extraInputRules = "meta skuid ${singBoxUser} accept";
-        allowedTCPPorts = [ 9090 ];
+        allowedTCPPorts = [
+          9090
+          9091
+        ];
       };
       networking.nftables = {
         enable = true;
