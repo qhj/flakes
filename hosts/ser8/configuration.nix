@@ -109,4 +109,5 @@
     '';
   };
   services.netbird.enable = true;
+  services.displayManager.defaultSession = lib.mkForce "plasma";
 }
