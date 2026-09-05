@@ -105,7 +105,10 @@
     };
   };
   hardware.bluetooth.enable = true;
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   hardware.graphics = {
     enable = true;
@@ -243,7 +246,16 @@
   qhj.sunshine.enable = true;
   services.pcscd.enable = true;
 
-  programs.steam.enable = true;
+  programs.steam = {
+    enable = true;
+    extraCompatPackages = with pkgs; [
+      dwproton-bin
+    ];
+    protontricks.enable = true;
+    extraPackages = with pkgs; [
+      mangohud
+    ];
+  };
   programs.gamemode.enable = true;
   programs.gamescope.enable = true;
   nixpkgs.config.allowUnfreePredicate =
@@ -252,4 +264,5 @@
       "steam"
       "steam-unwrapped"
     ];
+  services.displayManager.defaultSession = lib.mkForce "plasma";
 }

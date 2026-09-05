@@ -171,7 +171,10 @@
     53
     67
   ];
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   networking.nftables = {
     enable = true;

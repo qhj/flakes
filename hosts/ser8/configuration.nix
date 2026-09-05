@@ -86,7 +86,10 @@
     };
   };
   hardware.bluetooth.enable = true;
-  nix.settings.experimental-features = "nix-command flakes";
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   sops = {
     defaultSopsFile = ../../ser8.yaml;
