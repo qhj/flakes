@@ -3,6 +3,7 @@
   inputs,
   lib,
   config,
+  outputs,
   ...
 }:
 
@@ -11,6 +12,7 @@
     ./hardware-configuration.nix
     ../../modules/lanzaboote.nix
     (import ../../modules/niri { inherit inputs lib; })
+    (import ./dev-container.nix { inherit outputs; })
     ../../modules/fish
     ../../modules/sunshine.nix
     ./maid.nix
@@ -110,7 +112,7 @@
     "nix-command"
     "flakes"
   ];
-  nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+  nix.settings.substituters = [ "https://mirrors.cernet.edu.cn/nix-channels/store" ];
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
