@@ -26,5 +26,14 @@
 
       blacklist=HYPHelper
     '';
+
+    file.xdg_data."fcitx5/rime/default.custom.yaml".text = ''
+      patch:
+        __include: rime_ice_suggestion:/
+        menu/page_size: 7
+
+        schema_list:
+          - schema: rime_ice
+    '';
   };
 }

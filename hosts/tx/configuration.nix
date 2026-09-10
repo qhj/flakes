@@ -60,6 +60,12 @@
     type = "fcitx5";
     fcitx5 = {
       addons = with pkgs; [
+        (fcitx5-rime.override {
+          rimeDataPkgs = [
+            rime-data
+            pkgs.rime-ice
+          ];
+        })
         qt6Packages.fcitx5-chinese-addons
       ];
       waylandFrontend = true;
