@@ -32,6 +32,8 @@
         __include: rime_ice_suggestion:/
         menu/page_size: 7
         ascii_composer/switch_key/Shift_L: commit_code
+        switcher/hotkeys:
+          - F4
 
         schema_list:
           - schema: rime_ice
