@@ -1,7 +1,7 @@
 { ... }: {
   users.users.qhj.maid = {
     file.xdg_config."MangoHud/MangoHud.conf".text = ''
-      position=top-center
+      position=bottom-center
       horizontal
       horizontal_stretch=0
       legacy_layout=0
