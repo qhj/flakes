@@ -31,129 +31,150 @@
     }@inputs:
     let
       inherit (self) outputs;
-      system = "x86_64-linux";
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          (final: prev: {
-            neovim =
-              (prev.neovim.override {
-                configure = {
-                  packages.paaackage = {
-                    start = with prev.vimPlugins; [
-                      lz-n
-                    ];
-                    opt = with prev.vimPlugins; [
-                      snacks-nvim
-                      blink-cmp
-                      noice-nvim
-                      which-key-nvim
-                    ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+      pkgsFor = forAllSystems (
+        system:
+        import nixpkgs {
+          inherit system;
+          overlays = [
+            (final: prev: {
+              neovim =
+                (prev.neovim.override {
+                  configure = {
+                    packages.paaackage = {
+                      start = with prev.vimPlugins; [
+                        lz-n
+                      ];
+                      opt = with prev.vimPlugins; [
+                        snacks-nvim
+                        blink-cmp
+                        noice-nvim
+                        which-key-nvim
+                      ];
+                    };
                   };
-                };
-              }).overrideAttrs
-                (oldAttrs: {
-                  buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ final.makeWrapper ];
-                  postFixup = (oldAttrs.postFixup or "") + ''
-                    substituteInPlace $out/bin/nvim \
-                      --replace-fail "export VIMINIT=" "# export VIMINIT="
-                  '';
-                });
-          })
-        ];
-      };
+                }).overrideAttrs
+                  (oldAttrs: {
+                    buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ final.makeWrapper ];
+                    postFixup = (oldAttrs.postFixup or "") + ''
+                      substituteInPlace $out/bin/nvim \
+                        --replace-fail "export VIMINIT=" "# export VIMINIT="
+                    '';
+                  });
+            })
+          ];
+        }
+      );
     in
     {
-      formatter.x86_64-linux = pkgs.nixfmt-tree;
-      packages."${system}" = {
-        get-flake-root = pkgs.writeShellApplication {
-          name = "get-flake-root";
-          text = ''
-            FLAKE_ROOT="''${FLAKE_ROOT:-}"
-            if [[ -n "$FLAKE_ROOT" ]]; then
-              echo "$FLAKE_ROOT"
-              exit
-            fi
-
-            pwd="$PWD"
-            while true; do
-              if [[ -f "flake.nix" ]]; then
-                echo "$PWD"
+      formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = pkgsFor.${system};
+        in
+        {
+          get-flake-root = pkgs.writeShellApplication {
+            name = "get-flake-root";
+            text = ''
+              FLAKE_ROOT="''${FLAKE_ROOT:-}"
+              if [[ -n "$FLAKE_ROOT" ]]; then
+                echo "$FLAKE_ROOT"
                 exit
               fi
 
-              if [[ $PWD == "/" ]]; then
-                exit 1
-              fi
+              pwd="$PWD"
+              while true; do
+                if [[ -f "flake.nix" ]]; then
+                  echo "$PWD"
+                  exit
+                fi
 
-              cd ..
-            done
+                if [[ $PWD == "/" ]]; then
+                  exit 1
+                fi
 
-            cd "$pwd"
-          '';
-        };
-        nvimcfg = pkgs.writeShellApplication {
-          name = "nvimcfg";
-          runtimeInputs = with pkgs; [
-            neovim
-          ];
-          text = ''
-            FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
-            XDG_CONFIG_HOME="$FLAKE_ROOT"/overlays/neovim nvim "$@"
-          '';
-        };
-      };
-      devShells."${system}".default = pkgs.mkShellNoCC {
-        packages = with pkgs; [
-          bashInteractive
-          fish
-          git
-          nixd
-          nixfmt
-          lua-language-server
-          nodejs_24
-          typescript
-          bun
-          biome
-          codex
-          (vscode-with-extensions.override {
-            vscode = vscodium;
-            vscodeExtensions = with vscode-extensions; [
-              jnoortheen.nix-ide
-              biomejs.biome
-              tombi-toml.tombi
+                cd ..
+              done
+
+              cd "$pwd"
+            '';
+          };
+          nvimcfg = pkgs.writeShellApplication {
+            name = "nvimcfg";
+            runtimeInputs = with pkgs; [
+              neovim
             ];
-          })
-        ];
-        shellHook =
-          with pkgs;
-          let
-            settings = writers.writeJSON "settings.json" {
-              "terminal.integrated.defaultProfile.linux" = "fish";
-              "explorer.compactFolders" = false;
-              "nix.enableLanguageServer" = true;
-              "nix.serverPath" = "nixd";
-              "nix.formatterPath" = "nixfmt";
-              "[nix]" = {
-                "editor.defaultFormatter" = "jnoortheen.nix-ide";
-              };
-              "editor.formatOnSave" = true;
-              "editor.defaultFormatter" = "biomejs.biome";
-              "editor.codeActionsOnSave" = {
-                "source.organizeImports.biome" = "explicit";
-              };
-            };
-          in
-          ''
-            mkdir -p .vscode
-            ln -sf ${settings} .vscode/settings.json
+            text = ''
+              FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
+              XDG_CONFIG_HOME="$FLAKE_ROOT"/overlays/neovim nvim "$@"
+            '';
+          };
+        }
+      );
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = pkgsFor.${system};
+        in
+        {
+          default = pkgs.mkShellNoCC {
+            packages = with pkgs; [
+              bashInteractive
+              fish
+              git
+              nixd
+              nixfmt
+              lua-language-server
+              nodejs_24
+              typescript
+              bun
+              biome
+              codex
+              (vscode-with-extensions.override {
+                vscode = vscodium;
+                vscodeExtensions = with vscode-extensions; [
+                  jnoortheen.nix-ide
+                  biomejs.biome
+                  tombi-toml.tombi
+                ];
+              })
+            ];
+            shellHook =
+              with pkgs;
+              let
+                settings = writers.writeJSON "settings.json" {
+                  "terminal.integrated.defaultProfile.linux" = "fish";
+                  "explorer.compactFolders" = false;
+                  "nix.enableLanguageServer" = true;
+                  "nix.serverPath" = "nixd";
+                  "nix.formatterPath" = "nixfmt";
+                  "[nix]" = {
+                    "editor.defaultFormatter" = "jnoortheen.nix-ide";
+                  };
+                  "editor.formatOnSave" = true;
+                  "editor.defaultFormatter" = "biomejs.biome";
+                  "editor.codeActionsOnSave" = {
+                    "source.organizeImports.biome" = "explicit";
+                  };
+                };
+              in
+              ''
+                mkdir -p .vscode
+                ln -sf ${settings} .vscode/settings.json
 
-            export SHELL=${nixpkgs.lib.getExe fish}
-            export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
+                export SHELL=${nixpkgs.lib.getExe fish}
+                export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
 
-            exec "$SHELL"
-          '';
-      };
+                exec "$SHELL"
+              '';
+          };
+        }
+      );
       overlays = import ./overlays;
       nixosConfigurations = {
         mba = nixpkgs.lib.nixosSystem {
