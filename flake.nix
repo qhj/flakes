@@ -16,6 +16,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-maid.url = "git+https://codeberg.org/viperML/nix-maid";
+    apple-silicon.url = "github:nix-community/nixos-apple-silicon/release-2026-07-30";
   };
 
   outputs =
@@ -25,6 +26,7 @@
       lanzaboote,
       sops-nix,
       nix-maid,
+      apple-silicon,
       ...
     }@inputs:
     let
@@ -154,6 +156,19 @@
       };
       overlays = import ./overlays;
       nixosConfigurations = {
+        mba = nixpkgs.lib.nixosSystem {
+          modules = [
+            apple-silicon.nixosModules.default
+            ./hosts/mba/configuration.nix
+            ./modules/man-cache.nix
+            {
+              nixpkgs.overlays = with self.overlays; [
+                additions
+                modifications
+              ];
+            }
+          ];
+        };
         tx = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
