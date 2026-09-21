@@ -16,7 +16,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-maid.url = "git+https://codeberg.org/viperML/nix-maid";
-    apple-silicon.url = "github:nix-community/nixos-apple-silicon/release-2026-07-30";
+    apple-silicon = {
+      url = "github:nix-community/nixos-apple-silicon/release-2026-07-30";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    umbriel = {
+      url = "github:noctalia-dev/umbriel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -178,6 +185,7 @@
       overlays = import ./overlays;
       nixosConfigurations = {
         mba = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
           modules = [
             apple-silicon.nixosModules.default
             ./hosts/mba/configuration.nix
