@@ -60,6 +60,7 @@ in
     };
   };
   environment.systemPackages = with pkgs; [
+    adwaita-icon-theme
     helix
     fastfetch
     ghostty
@@ -81,7 +82,16 @@ in
         });
   };
   programs.noctalia.enable = true;
-  services.displayManager.noctalia-greeter.enable = true;
+  services.displayManager.noctalia-greeter = {
+    enable = true;
+    cursorTheme = {
+      package = pkgs.adwaita-icon-theme;
+      name = "Adwaita";
+    };
+    settings = {
+      cursor.size = 32;
+    };
+  };
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
