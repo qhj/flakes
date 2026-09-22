@@ -66,7 +66,14 @@ in
     telegram-desktop
   ];
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
-  programs.umbriel.enable = true;
+  programs.umbriel = {
+    enable = true;
+    package =
+      inputs.umbriel.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
+        (oldAttrs: {
+          patches = (oldAttrs.patches or [ ]) ++ [ ./umbriel-default-keybinds.patch ];
+        });
+  };
   programs.noctalia.enable = true;
   services.displayManager.noctalia-greeter.enable = true;
   i18n.inputMethod = {

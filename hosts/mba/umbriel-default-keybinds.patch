@@ -1,0 +1,11 @@
+diff --git a/src/config/config.cpp b/src/config/config.cpp
+--- a/src/config/config.cpp
++++ b/src/config/config.cpp
+@@ -2450,6 +2450,7 @@ namespace umbriel {
+         }
+ 
+         Config loaded;
++        loaded.keybinds = defaultKeybinds();
+         {
+           Section root(result.merged, "", store.mutableDiagnostics());
+           readColors(root, loaded);
