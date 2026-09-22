@@ -66,6 +66,12 @@ in
     telegram-desktop
   ];
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
+  # Swap Caps Lock and left Control on the built-in keyboard at the evdev layer.
+  services.udev.extraHwdb = ''
+    evdev:name:Apple SPI Keyboard:*
+     KEYBOARD_KEY_70039=leftctrl
+     KEYBOARD_KEY_700e0=capslock
+  '';
   programs.umbriel = {
     enable = true;
     package =
