@@ -88,6 +88,7 @@ in
     cursorTheme = {
       package = pkgs.adwaita-icon-theme;
     };
+    settings.output.scale = 1.777778;
   };
   i18n.inputMethod = {
     enable = true;
