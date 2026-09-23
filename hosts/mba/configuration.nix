@@ -39,7 +39,6 @@ in
   boot.loader.efi.canTouchEfiVariables = false;
 
   networking.hostName = "mba";
-  networking.networkmanager.enable = true;
   time.timeZone = "Asia/Shanghai";
 
   programs.firefox.enable = true;
@@ -67,7 +66,6 @@ in
     telegram-desktop
   ];
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
-  # Swap Caps Lock and left Control on the built-in keyboard at the evdev layer.
   services.udev.extraHwdb = ''
     evdev:name:Apple SPI Keyboard:*
      KEYBOARD_KEY_70039=leftctrl
@@ -81,15 +79,14 @@ in
           patches = (oldAttrs.patches or [ ]) ++ [ ./umbriel-default-keybinds.patch ];
         });
   };
-  programs.noctalia.enable = true;
+  programs.noctalia = {
+    enable = true;
+    recommendedServices.enable = true;
+  };
   services.displayManager.noctalia-greeter = {
     enable = true;
     cursorTheme = {
       package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
-    };
-    settings = {
-      cursor.size = 32;
     };
   };
   i18n.inputMethod = {
