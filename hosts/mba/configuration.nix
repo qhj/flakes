@@ -26,6 +26,16 @@ in
   system.stateVersion = "26.11";
 
   hardware.asahi.enable = true;
+  # /boot/m1n1/boot.bin is stage 2. CHAINLOADING builds are for stage 1
+  # and skip the display power-cycle workaround needed with Sequoia system
+  # firmware and older OS firmware (otherwise brightness only changes at 0%).
+  nixpkgs.overlays = [
+    (_final: prev: {
+      m1n1 = prev.m1n1.overrideAttrs (oldAttrs: {
+        makeFlags = lib.remove "CHAINLOADING=1" oldAttrs.makeFlags;
+      });
+    })
+  ];
   hardware.asahi.peripheralFirmwareDirectory = pkgs.linkFarm "asahi-peripheral-firmware" [
     {
       name = "firmware.cpio";
