@@ -46,7 +46,7 @@
 
     file.xdg_config."fcitx5/config".text = ''
       [Hotkey/TriggerKeys]
-      0=Shift+Shift_R
+      0=Control+Shift+Shift_R
 
       [Hotkey/AltTriggerKeys]
       0=Shift+Shift_R
