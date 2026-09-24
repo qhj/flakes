@@ -196,6 +196,7 @@
                 modifications
               ];
             }
+            nix-maid.nixosModules.default
           ];
         };
         tx = nixpkgs.lib.nixosSystem {
