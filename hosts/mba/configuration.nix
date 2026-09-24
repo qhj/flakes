@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   pkgs,
   ...
@@ -18,7 +17,7 @@ in
   imports = [
     ./hardware-configuration.nix
     ../../modules/fish
-    inputs.umbriel.nixosModules.default
+    ../../modules/umbriel
     ./maid.nix
   ];
 
@@ -70,10 +69,8 @@ in
     };
   };
   environment.systemPackages = with pkgs; [
-    adwaita-icon-theme
     helix
     fastfetch
-    ghostty
     telegram-desktop
   ];
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
@@ -82,18 +79,7 @@ in
      KEYBOARD_KEY_70039=leftctrl
      KEYBOARD_KEY_700e0=capslock
   '';
-  programs.umbriel = {
-    enable = true;
-    package =
-      inputs.umbriel.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
-        (oldAttrs: {
-          patches = (oldAttrs.patches or [ ]) ++ [ ./umbriel-default-keybinds.patch ];
-        });
-  };
-  programs.noctalia = {
-    enable = true;
-    recommendedServices.enable = true;
-  };
+  programs.noctalia.recommendedServices.enable = true;
   services.displayManager.noctalia-greeter = {
     enable = true;
     cursorTheme = {

@@ -1,0 +1,17 @@
+[general]
+autostart = [
+  "noctalia",
+  "activate-linux -c 0.5-0.5-0.5-0.8 -t '激活 Linux' -m '转到“设置”以激活 Linux。'",
+]
+
+[keybinds]
+"Mod" = "spawn:noctalia msg panel-toggle launcher"
+"Mod+Alt+P" = "spawn:noctalia msg screenshot-region"
+"Mod+Ctrl+P" = "spawn:noctalia msg screenshot-fullscreen"
+"Mod+Return" = "spawn:ghostty"
+"Mod+F" = "window-toggle-maximize"
+"Mod+Shift+F" = "window-toggle-fullscreen"
+"Mod+Shift+Slash" = "cheatsheet-toggle"
+
+[input.cursor]
+theme = "Adwaita"

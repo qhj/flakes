@@ -1,0 +1,123 @@
+{
+  inputs,
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  imports = [ inputs.noctalia.nixosModules.default ];
+
+  environment.etc."noctalia/config.toml".source = pkgs.replaceVars ./config.toml {
+    noctalia-plugins-dir = "${./plugins}";
+    sync-theme-mode =
+      let
+        sync-theme-mode = pkgs.writeShellApplication {
+          name = "sync-theme-mode";
+          runtimeInputs = [
+            pkgs.glib
+          ]
+          ++ lib.optional config.services.desktopManager.plasma6.enable pkgs.kdePackages.plasma-workspace;
+          text = ''
+            mode="''${NOCTALIA_THEME_MODE:-}"
+
+            if [[ -z "$mode" ]]; then
+              mode="$(noctalia msg theme-mode-get)"
+            fi
+
+            case "$mode" in
+              dark)
+                kde_scheme="BreezeDark"
+                color_scheme="prefer-dark"
+                gtk_theme="${
+                  if config.services.desktopManager.plasma6.enable then "Breeze-Dark" else "Adwaita-dark"
+                }"
+                ;;
+              light)
+                kde_scheme="BreezeLight"
+                color_scheme="prefer-light"
+                gtk_theme="${if config.services.desktopManager.plasma6.enable then "Breeze" else "Adwaita"}"
+                ;;
+              *)
+                printf 'Unsupported theme mode: %s\n' "$mode" >&2
+                exit 1
+                ;;
+            esac
+
+            if command -v plasma-apply-colorscheme >/dev/null; then
+              plasma-apply-colorscheme "$kde_scheme"
+            fi
+            gsettings set org.gnome.desktop.interface color-scheme "$color_scheme"
+            gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
+          '';
+        };
+      in
+      "${sync-theme-mode}/bin/sync-theme-mode";
+  };
+  environment.systemPackages = with pkgs; [
+    ddcutil
+    gpu-screen-recorder
+    playerctl
+  ];
+
+  programs.noctalia = {
+    enable = true;
+    package =
+      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
+        (oldAttrs: {
+          nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.wrapGAppsNoGuiHook ];
+          buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ pkgs.gsettings-desktop-schemas ];
+          dontWrapGApps = true;
+          postFixup = ''
+            wrapProgram "$out/bin/noctalia" \
+              --prefix PATH : ${
+                lib.makeBinPath [
+                  pkgs.git
+                ]
+              } \
+              "''${gappsWrapperArgs[@]}"
+          '';
+        });
+  };
+  # Firefox treats the default theme asymmetrically: a Library window opened in
+  # dark mode gets an explicit "dark" override, while one opened in light mode
+  # gets "none" and keeps following the system. The dark override can become
+  # stale, so keep it in sync with the resolved browser theme.
+  programs.firefox.autoConfig = ''
+    (() => {
+      const updateLibraryTheme = window => {
+        if (
+          window.document.documentElement.getAttribute("windowtype") !==
+          "Places:Organizer"
+        ) {
+          return;
+        }
+
+        const theme = Services.prefs.getIntPref(
+          "browser.theme.toolbar-theme",
+          2
+        );
+        window.browsingContext.prefersColorSchemeOverride =
+          theme === 0 ? "dark" : theme === 1 ? "light" : "none";
+      };
+
+      const updateOpenLibraries = () => {
+        for (const window of Services.wm.getEnumerator("Places:Organizer")) {
+          updateLibraryTheme(window);
+        }
+      };
+
+      Services.prefs.addObserver(
+        "browser.theme.toolbar-theme",
+        updateOpenLibraries
+      );
+      Services.obs.addObserver(window => {
+        window.addEventListener(
+          "load",
+          () => updateLibraryTheme(window),
+          { once: true }
+        );
+      }, "domwindowopened");
+    })();
+  '';
+}
