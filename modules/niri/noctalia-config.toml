@@ -20,7 +20,7 @@ end = [
 margin_ends = 0
 padding = 8
 radius = 0
-start = [ "launcher", "hostname", "wallpaper", "workspaces", "active_window", "media", "lyrics" ]
+start = [ "launcher", "hostname", "wallpaper", "workspaces", "active_window", "media" ]
 
 [[bar.default.capsule_group]]
 enabled = true
@@ -37,16 +37,8 @@ theme_mode_changed = "@sync-theme-mode@"
 [location]
 address = "南沙区"
 
-[plugin_settings."h465855hgg/lyrics"]
-animation = "wave"
-cue_text = "♪ instrumental ♪"
-display_mode = "lyrics"
-double_line = false
-karaoke_enabled = false
-scroll_mode = "static"
-
 [plugins]
-enabled = [ "noctalia/screen_recorder", "noctalia/mpvpaper", "dotnetrob/cat", "h465855hgg/lyrics", "local/hostname" ]
+enabled = [ "noctalia/screen_recorder", "noctalia/mpvpaper", "dotnetrob/cat", "local/hostname" ]
 
 [[plugins.source]]
 kind = "git"
@@ -111,12 +103,6 @@ type = "local/hostname:hostname"
 
 [widget.launcher]
 glyph = "snowflake"
-
-[widget.lyrics]
-hide_when_no_lyrics = true
-show_cover = false
-show_glyph = false
-type = "h465855hgg/lyrics:lyrics"
 
 [widget.media]
 hide_when_no_media = true
