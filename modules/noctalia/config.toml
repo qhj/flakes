@@ -23,11 +23,13 @@ radius = 0
 scale = 0.8
 start = [ "launcher", "hostname", "wallpaper", "workspaces", "active_window", "media" ]
 thickness = 30
+widget_spacing = 0
 
 [[bar.default.capsule_group]]
 enabled = true
 id = "g1"
 members = [ "cpu", "temp", "ram", "network_rx", "network_tx" ]
+widget_spacing = 6
 
 [brightness]
 enable_ddcutil = true
@@ -111,6 +113,9 @@ hide_when_no_media = true
 max_length = 180
 title_scroll = "on_hover"
 
+[widget.network]
+show_label = false
+
 [widget.network_rx]
 label_min_width = 44
 network_speed_compact = true
@@ -129,6 +134,9 @@ type = "noctalia/screen_recorder:recorder"
 
 [widget.temp]
 visualization = "none"
+
+[widget.tray]
+match_adjacent_spacing = true
 
 [widget.wallpaper]
 enabled = false
