@@ -51,6 +51,13 @@
           overlays = [ self.overlays.additions ];
         }
       );
+      systemOverlays = with self.overlays; [
+        additions
+        modifications
+      ];
+      overlayModule = {
+        nixpkgs.overlays = systemOverlays;
+      };
     in
     {
       formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
@@ -78,32 +85,19 @@
             apple-silicon.nixosModules.default
             ./hosts/mba
             ./modules/man-cache.nix
-            {
-              nixpkgs.overlays = with self.overlays; [
-                additions
-                modifications
-              ];
-            }
+            overlayModule
             nix-maid.nixosModules.default
           ];
         };
         tx = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit noctalia;
-            overlays = with self.overlays; [
-              additions
-              modifications
-            ];
+            overlays = systemOverlays;
           };
           modules = [
             ./hosts/tx
             ./modules/man-cache.nix
-            {
-              nixpkgs.overlays = with self.overlays; [
-                additions
-                modifications
-              ];
-            }
+            overlayModule
             lanzaboote.nixosModules.lanzaboote
             nix-maid.nixosModules.default
           ];
@@ -111,12 +105,7 @@
         gk41 = nixpkgs.lib.nixosSystem {
           modules = [
             ./hosts/gk41
-            {
-              nixpkgs.overlays = with self.overlays; [
-                additions
-                modifications
-              ];
-            }
+            overlayModule
             sops-nix.nixosModules.sops
           ];
         };
@@ -126,36 +115,21 @@
             ./hosts/ser8
             ./modules/man-cache.nix
             sops-nix.nixosModules.sops
-            {
-              nixpkgs.overlays = with self.overlays; [
-                additions
-                modifications
-              ];
-            }
+            overlayModule
             lanzaboote.nixosModules.lanzaboote
           ];
         };
         ms10 = nixpkgs.lib.nixosSystem {
           modules = [
             ./hosts/ms10
-            {
-              nixpkgs.overlays = with self.overlays; [
-                additions
-                modifications
-              ];
-            }
+            overlayModule
             sops-nix.nixosModules.sops
           ];
         };
         lh0 = nixpkgs.lib.nixosSystem {
           modules = [
             ./hosts/lh0
-            {
-              nixpkgs.overlays = with self.overlays; [
-                additions
-                modifications
-              ];
-            }
+            overlayModule
             sops-nix.nixosModules.sops
           ];
         };
