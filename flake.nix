@@ -75,7 +75,7 @@
           specialArgs = { inherit inputs; };
           modules = [
             apple-silicon.nixosModules.default
-            ./hosts/mba/configuration.nix
+            ./hosts/mba
             ./modules/man-cache.nix
             {
               nixpkgs.overlays = with self.overlays; [
@@ -89,7 +89,7 @@
         tx = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./hosts/tx/configuration.nix
+            ./hosts/tx
             ./modules/man-cache.nix
             {
               nixpkgs.overlays = with self.overlays; [
@@ -104,7 +104,7 @@
         gk41 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./hosts/gk41/configuration.nix
+            ./hosts/gk41
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
@@ -117,7 +117,7 @@
         ser8 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./hosts/ser8/configuration.nix
+            ./hosts/ser8
             ./modules/man-cache.nix
             sops-nix.nixosModules.sops
             {
@@ -132,7 +132,7 @@
         ms10 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./hosts/ms10/configuration.nix
+            ./hosts/ms10
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
@@ -145,7 +145,7 @@
         lh0 = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs outputs; };
           modules = [
-            ./hosts/lh0/configuration.nix
+            ./hosts/lh0
             {
               nixpkgs.overlays = with self.overlays; [
                 additions
