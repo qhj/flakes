@@ -28,11 +28,10 @@
 
   services.openssh.enable = true;
 
-  nix = {
-    settings = {
-      experimental-features = "nix-command flakes";
-    };
-  };
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   users = {
     groups.qhj.gid = 1000;
