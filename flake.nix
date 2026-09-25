@@ -53,86 +53,20 @@
     in
     {
       formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
-      packages = forAllSystems (
-        system:
-        let
-          pkgs = pkgsFor.${system};
-        in
-        {
-          repo-root = pkgs.writeShellApplication {
-            name = "repo-root";
-            runtimeInputs = [ pkgs.git ];
-            text = ''
-              exec git rev-parse --show-toplevel
-            '';
-          };
-          nvim-dev = pkgs.writeShellApplication {
-            name = "nvim-dev";
-            runtimeInputs = [ pkgs.neovim ];
-            text = ''
-              FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.repo-root})
-              XDG_CONFIG_HOME="$FLAKE_ROOT"/pkgs/neovim/config nvim "$@"
-            '';
-          };
-        }
-      );
+      packages = forAllSystems (system: import ./dev/packages.nix { pkgs = pkgsFor.${system}; });
       devShells = forAllSystems (
         system:
         let
           pkgs = pkgsFor.${system};
+          dev = import ./dev/shell.nix {
+            inherit pkgs;
+            repoRoot = self.packages.${system}.repo-root;
+          };
         in
         {
-          default = pkgs.mkShellNoCC {
-            packages = with pkgs; [
-              bashInteractive
-              fish
-              git
-              nixd
-              nixfmt
-              lua-language-server
-              nodejs_24
-              typescript
-              bun
-              biome
-              codex
-              (vscode-with-extensions.override {
-                vscode = vscodium;
-                vscodeExtensions = with vscode-extensions; [
-                  jnoortheen.nix-ide
-                  biomejs.biome
-                  tombi-toml.tombi
-                ];
-              })
-            ];
-            shellHook =
-              with pkgs;
-              let
-                settings = writers.writeJSON "settings.json" {
-                  "terminal.integrated.defaultProfile.linux" = "fish";
-                  "explorer.compactFolders" = false;
-                  "nix.enableLanguageServer" = true;
-                  "nix.serverPath" = "nixd";
-                  "nix.formatterPath" = "nixfmt";
-                  "[nix]" = {
-                    "editor.defaultFormatter" = "jnoortheen.nix-ide";
-                  };
-                  "editor.formatOnSave" = true;
-                  "editor.defaultFormatter" = "biomejs.biome";
-                  "editor.codeActionsOnSave" = {
-                    "source.organizeImports.biome" = "explicit";
-                  };
-                };
-              in
-              ''
-                mkdir -p .vscode
-                ln -sf ${settings} .vscode/settings.json
-
-                export SHELL=${nixpkgs.lib.getExe fish}
-                export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.repo-root})
-
-                exec "$SHELL"
-              '';
-          };
+          default = dev;
+          inherit dev;
+          ci = import ./dev/ci.nix { inherit pkgs; };
         }
       );
       overlays = import ./overlays;
