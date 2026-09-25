@@ -47,33 +47,7 @@
         system:
         import nixpkgs {
           inherit system;
-          overlays = [
-            (final: prev: {
-              neovim =
-                (prev.neovim.override {
-                  configure = {
-                    packages.paaackage = {
-                      start = with prev.vimPlugins; [
-                        lz-n
-                      ];
-                      opt = with prev.vimPlugins; [
-                        snacks-nvim
-                        blink-cmp
-                        noice-nvim
-                        which-key-nvim
-                      ];
-                    };
-                  };
-                }).overrideAttrs
-                  (oldAttrs: {
-                    buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ final.makeWrapper ];
-                    postFixup = (oldAttrs.postFixup or "") + ''
-                      substituteInPlace $out/bin/nvim \
-                        --replace-fail "export VIMINIT=" "# export VIMINIT="
-                    '';
-                  });
-            })
-          ];
+          overlays = [ self.overlays.additions ];
         }
       );
     in
@@ -85,40 +59,19 @@
           pkgs = pkgsFor.${system};
         in
         {
-          get-flake-root = pkgs.writeShellApplication {
-            name = "get-flake-root";
+          repo-root = pkgs.writeShellApplication {
+            name = "repo-root";
+            runtimeInputs = [ pkgs.git ];
             text = ''
-              FLAKE_ROOT="''${FLAKE_ROOT:-}"
-              if [[ -n "$FLAKE_ROOT" ]]; then
-                echo "$FLAKE_ROOT"
-                exit
-              fi
-
-              pwd="$PWD"
-              while true; do
-                if [[ -f "flake.nix" ]]; then
-                  echo "$PWD"
-                  exit
-                fi
-
-                if [[ $PWD == "/" ]]; then
-                  exit 1
-                fi
-
-                cd ..
-              done
-
-              cd "$pwd"
+              exec git rev-parse --show-toplevel
             '';
           };
-          nvimcfg = pkgs.writeShellApplication {
-            name = "nvimcfg";
-            runtimeInputs = with pkgs; [
-              neovim
-            ];
+          nvim-dev = pkgs.writeShellApplication {
+            name = "nvim-dev";
+            runtimeInputs = [ pkgs.neovim ];
             text = ''
-              FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
-              XDG_CONFIG_HOME="$FLAKE_ROOT"/overlays/neovim nvim "$@"
+              FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.repo-root})
+              XDG_CONFIG_HOME="$FLAKE_ROOT"/pkgs/neovim/config nvim "$@"
             '';
           };
         }
@@ -175,7 +128,7 @@
                 ln -sf ${settings} .vscode/settings.json
 
                 export SHELL=${nixpkgs.lib.getExe fish}
-                export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.get-flake-root})
+                export FLAKE_ROOT=$(${nixpkgs.lib.getExe self.packages.${system}.repo-root})
 
                 exec "$SHELL"
               '';

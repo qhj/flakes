@@ -1,5 +1,7 @@
 { ... }: {
   users.users.qhj.maid = {
+    file.xdg_config."nvim".source = ../../pkgs/neovim/config/nvim;
+
     file.xdg_config."MangoHud/MangoHud.conf".text = ''
       position=bottom-center
       horizontal
