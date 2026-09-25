@@ -34,10 +34,11 @@
       sops-nix,
       nix-maid,
       apple-silicon,
+      noctalia,
+      umbriel,
       ...
-    }@inputs:
+    }:
     let
-      inherit (self) outputs;
       systems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -72,7 +73,7 @@
       overlays = import ./overlays;
       nixosConfigurations = {
         mba = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit noctalia umbriel; };
           modules = [
             apple-silicon.nixosModules.default
             ./hosts/mba
@@ -87,7 +88,13 @@
           ];
         };
         tx = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
+          specialArgs = {
+            inherit noctalia;
+            overlays = with self.overlays; [
+              additions
+              modifications
+            ];
+          };
           modules = [
             ./hosts/tx
             ./modules/man-cache.nix
@@ -102,7 +109,6 @@
           ];
         };
         gk41 = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
           modules = [
             ./hosts/gk41
             {
@@ -115,7 +121,7 @@
           ];
         };
         ser8 = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
+          specialArgs = { inherit noctalia; };
           modules = [
             ./hosts/ser8
             ./modules/man-cache.nix
@@ -130,7 +136,6 @@
           ];
         };
         ms10 = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
           modules = [
             ./hosts/ms10
             {
@@ -143,7 +148,6 @@
           ];
         };
         lh0 = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs outputs; };
           modules = [
             ./hosts/lh0
             {

@@ -2,7 +2,7 @@
   pkgs,
   lib,
   config,
-  outputs,
+  overlays,
   ...
 }:
 
@@ -11,7 +11,7 @@
     ./hardware-configuration.nix
     ../../modules/lanzaboote.nix
     ../../modules/niri
-    (import ./dev-container.nix { inherit outputs; })
+    (import ./dev-container.nix { inherit overlays; })
     ../../modules/fish
     ../../modules/sunshine.nix
     ./maid.nix

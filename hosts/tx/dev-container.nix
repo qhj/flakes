@@ -1,4 +1,4 @@
-{ outputs }:
+{ overlays }:
 { ... }:
 
 {
@@ -11,10 +11,7 @@
         ...
       }:
       {
-        nixpkgs.overlays = with outputs.overlays; [
-          additions
-          modifications
-        ];
+        nixpkgs.overlays = overlays;
         imports = [
           ../../modules/fish/default.nix
         ];

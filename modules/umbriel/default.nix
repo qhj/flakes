@@ -1,17 +1,15 @@
-{ inputs, pkgs, ... }:
+{ umbriel, pkgs, ... }:
 {
   imports = [
-    inputs.umbriel.nixosModules.default
+    umbriel.nixosModules.default
     ../noctalia
   ];
 
   programs.umbriel = {
     enable = true;
-    package =
-      inputs.umbriel.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
-        (oldAttrs: {
-          patches = (oldAttrs.patches or [ ]) ++ [ ./default-keybinds.patch ];
-        });
+    package = umbriel.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
+      patches = (oldAttrs.patches or [ ]) ++ [ ./default-keybinds.patch ];
+    });
   };
 
   environment.etc."umbriel/config.toml".source = ./config.toml;
