@@ -53,12 +53,12 @@
     in
     {
       formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
-      packages = forAllSystems (system: import ./dev/packages.nix { pkgs = pkgsFor.${system}; });
+      packages = forAllSystems (system: import ./packages.nix { pkgs = pkgsFor.${system}; });
       devShells = forAllSystems (
         system:
         let
           pkgs = pkgsFor.${system};
-          dev = import ./dev/shell.nix {
+          dev = import ./shells/dev.nix {
             inherit pkgs;
             repoRoot = self.packages.${system}.repo-root;
           };
@@ -66,7 +66,7 @@
         {
           default = dev;
           inherit dev;
-          ci = import ./dev/ci.nix { inherit pkgs; };
+          ci = import ./shells/ci.nix { inherit pkgs; };
         }
       );
       overlays = import ./overlays;
