@@ -5,8 +5,6 @@
     ../noctalia
   ];
 
-  qt.enable = true;
-
   programs.umbriel = {
     enable = true;
     package = umbriel.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
@@ -19,7 +17,5 @@
   environment.systemPackages = with pkgs; [
     adwaita-icon-theme
     activate-linux
-    kdePackages.plasma-integration
-    kdePackages.breeze
   ];
 }

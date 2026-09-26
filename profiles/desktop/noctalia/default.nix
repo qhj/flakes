@@ -7,6 +7,8 @@
 {
   imports = [ noctalia.nixosModules.default ];
 
+  qt.enable = true;
+
   environment.etc."noctalia/config.toml".source = pkgs.replaceVars ./config.toml {
     noctalia-plugins-dir = "${./plugins}";
     sync-theme-mode =
@@ -53,6 +55,8 @@
     ddcutil
     gpu-screen-recorder
     playerctl
+    kdePackages.plasma-integration
+    kdePackages.breeze
     kdePackages.breeze-gtk
   ];
 
