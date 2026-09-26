@@ -76,7 +76,6 @@
   ];
   environment.systemPackages = with pkgs; [
     helix
-    fastfetch
     wol
     dig
   ];

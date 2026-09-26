@@ -84,7 +84,6 @@
           modules = [
             apple-silicon.nixosModules.default
             ./hosts/mba
-            ./modules/man-cache.nix
             overlayModule
             nix-maid.nixosModules.default
           ];
@@ -96,7 +95,6 @@
           };
           modules = [
             ./hosts/tx
-            ./modules/man-cache.nix
             overlayModule
             lanzaboote.nixosModules.lanzaboote
             nix-maid.nixosModules.default
@@ -113,10 +111,10 @@
           specialArgs = { inherit noctalia; };
           modules = [
             ./hosts/ser8
-            ./modules/man-cache.nix
             sops-nix.nixosModules.sops
             overlayModule
             lanzaboote.nixosModules.lanzaboote
+            nix-maid.nixosModules.default
           ];
         };
         ms10 = nixpkgs.lib.nixosSystem {

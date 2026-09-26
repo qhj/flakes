@@ -55,7 +55,6 @@ in
     polkit-kde-agent-1 = pkgs.kdePackages.polkit-kde-agent-1;
   };
   environment.systemPackages = with pkgs; [
-    fastfetch
     xwayland-satellite
     python3
     activate-linux

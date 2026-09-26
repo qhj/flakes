@@ -11,8 +11,11 @@
     ./hardware-configuration.nix
     ../../profiles/base.nix
     ../../profiles/users/qhj.nix
-    ../../modules/lanzaboote.nix
-    ../../modules/niri
+    ../../profiles/desktop/plasma.nix
+    ../../profiles/desktop/fonts.nix
+    ../../profiles/desktop/fcitx5.nix
+    ../../profiles/lanzaboote.nix
+    ../../profiles/desktop/niri
     (import ./dev-container.nix { inherit overlays; })
     ../../modules/sunshine.nix
     ./maid.nix
@@ -23,46 +26,16 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  services.xserver.enable = true;
   services.openssh.enable = true;
 
   networking.hostName = "tx";
-  networking.networkmanager.enable = true;
-  programs.firefox.enable = true;
-  programs.firefox.preferences = {
-    "browser.tabs.inTitlebar" = 0;
-    "ui.key.menuAccessKeyFocuses" = false;
-  };
   users.users.qhj.extraGroups = [
     (lib.mkIf config.virtualisation.libvirtd.enable "libvirtd")
     (lib.mkIf config.hardware.i2c.enable "i2c")
   ];
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-  };
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-    fcitx5 = {
-      addons = with pkgs; [
-        (fcitx5-rime.override {
-          rimeDataPkgs = [
-            rime-data
-            pkgs.rime-ice
-          ];
-        })
-        qt6Packages.fcitx5-chinese-addons
-      ];
-      waylandFrontend = true;
-    };
-  };
   environment.systemPackages = with pkgs; [
     neovim
     helix
-    #fastfetch
     file
     tree
     git
@@ -82,26 +55,6 @@
     mpvpaper
     waydroid-helper
   ];
-  fonts.packages = with pkgs; [
-    noto-fonts-cjk-sans-static
-    noto-fonts-cjk-serif-static
-    fantasque-sans-mono
-  ];
-  fonts.fontconfig = {
-    defaultFonts = {
-      serif = [
-        "Noto Serif CJK SC"
-      ];
-      sansSerif = [
-        "Noto Sans CJK SC"
-      ];
-      monospace = [
-        "Fantasque Sans Mono"
-        "Noto Sans Mono CJK SC"
-      ];
-    };
-  };
-  hardware.bluetooth.enable = true;
   nix.settings.substituters = [ "https://mirrors.cernet.edu.cn/nix-channels/store" ];
   hardware.graphics = {
     enable = true;
@@ -116,11 +69,6 @@
   };
   nixpkgs.config.chromium.commandLineArgs = "--enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,VaapiVideoDecoder,PlatformHEVCDecoderSupport,UseMultiPlaneFormatForHardwareVideo";
   # services.fprintd.enable = true;
-
-  environment.shellAliases = with pkgs; {
-    ff = "${fastfetch}/bin/fastfetch";
-    # zed = "${zed-editor}/bin/zeditor";
-  };
 
   virtualisation = {
     libvirtd = {
@@ -257,5 +205,4 @@
       "steam"
       "steam-unwrapped"
     ];
-  services.displayManager.defaultSession = lib.mkForce "plasma";
 }

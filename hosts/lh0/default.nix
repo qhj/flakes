@@ -1,5 +1,3 @@
-{ pkgs, ... }:
-
 {
   imports = [
     ./hardware-configuration.nix
@@ -27,10 +25,6 @@
   ];
   users.users.root.openssh.authorizedKeys.keys = [
     "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
-  ];
-
-  environment.systemPackages = with pkgs; [
-    fastfetch
   ];
 
   # networking.firewall.allowedTCPPorts = [

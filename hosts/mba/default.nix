@@ -18,7 +18,9 @@ in
     ./hardware-configuration.nix
     ../../profiles/base.nix
     ../../profiles/users/qhj.nix
-    ../../modules/umbriel
+    ../../profiles/desktop/fonts.nix
+    ../../profiles/desktop/fcitx5.nix
+    ../../profiles/desktop/umbriel
     ./maid.nix
   ];
 
@@ -54,7 +56,6 @@ in
   networking.networkmanager.wifi.backend = "iwd";
   environment.systemPackages = with pkgs; [
     helix
-    fastfetch
     telegram-desktop
   ];
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
@@ -70,21 +71,5 @@ in
       package = pkgs.adwaita-icon-theme;
     };
     settings.output.scale = 1.777778;
-  };
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-    fcitx5 = {
-      addons = with pkgs; [
-        (fcitx5-rime.override {
-          rimeDataPkgs = [
-            rime-data
-            pkgs.rime-ice
-          ];
-        })
-        qt6Packages.fcitx5-chinese-addons
-      ];
-      waylandFrontend = true;
-    };
   };
 }
