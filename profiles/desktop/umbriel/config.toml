@@ -3,6 +3,7 @@ QT_QPA_PLATFORMTHEME = "kde"
 XDG_MENU_PREFIX = "plasma-"
 
 [general]
+focus_on_activate = true
 autostart = [
   "noctalia",
   "activate-linux -c 0.5-0.5-0.5-0.8 -t '激活 Linux' -m '转到“设置”以激活 Linux。'",
