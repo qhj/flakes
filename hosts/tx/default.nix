@@ -25,7 +25,6 @@
 
   system.stateVersion = "24.11";
 
-  boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   services.openssh.enable = true;
