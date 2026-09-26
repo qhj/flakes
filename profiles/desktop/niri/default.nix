@@ -61,15 +61,6 @@ in
   ];
   hardware.i2c.enable = true;
 
-  # remove buttons on titlebar
-  programs.dconf.profiles.user.databases = [
-    {
-      lockAll = true;
-      settings = {
-        "org/gnome/desktop/wm/preferences".button-layout = "";
-      };
-    }
-  ];
   services.gnome.gcr-ssh-agent.enable = false;
   xdg.portal.config = {
     niri."org.freedesktop.impl.portal.FileChooser" = "kde";

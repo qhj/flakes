@@ -1,6 +1,5 @@
 {
   noctalia,
-  config,
   lib,
   pkgs,
   ...
@@ -14,10 +13,10 @@
       let
         sync-theme-mode = pkgs.writeShellApplication {
           name = "sync-theme-mode";
-          runtimeInputs = [
-            pkgs.glib
-          ]
-          ++ lib.optional config.services.desktopManager.plasma6.enable pkgs.kdePackages.plasma-workspace;
+          runtimeInputs = with pkgs; [
+            glib
+            kdePackages.plasma-workspace
+          ];
           text = ''
             mode="''${NOCTALIA_THEME_MODE:-}"
 
@@ -29,14 +28,12 @@
               dark)
                 kde_scheme="BreezeDark"
                 color_scheme="prefer-dark"
-                gtk_theme="${
-                  if config.services.desktopManager.plasma6.enable then "Breeze-Dark" else "Adwaita-dark"
-                }"
+                gtk_theme="Breeze-Dark"
                 ;;
               light)
                 kde_scheme="BreezeLight"
                 color_scheme="prefer-light"
-                gtk_theme="${if config.services.desktopManager.plasma6.enable then "Breeze" else "Adwaita"}"
+                gtk_theme="Breeze"
                 ;;
               *)
                 printf 'Unsupported theme mode: %s\n' "$mode" >&2
@@ -44,9 +41,7 @@
                 ;;
             esac
 
-            if command -v plasma-apply-colorscheme >/dev/null; then
-              plasma-apply-colorscheme "$kde_scheme"
-            fi
+            plasma-apply-colorscheme "$kde_scheme"
             gsettings set org.gnome.desktop.interface color-scheme "$color_scheme"
             gsettings set org.gnome.desktop.interface gtk-theme "$gtk_theme"
           '';
@@ -58,6 +53,17 @@
     ddcutil
     gpu-screen-recorder
     playerctl
+    kdePackages.breeze-gtk
+  ];
+
+  # remove buttons on titlebar
+  programs.dconf.profiles.user.databases = [
+    {
+      lockAll = true;
+      settings = {
+        "org/gnome/desktop/wm/preferences".button-layout = "";
+      };
+    }
   ];
 
   programs.noctalia = {
