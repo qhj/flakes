@@ -10,6 +10,7 @@
     ./hardware-configuration.nix
     ../../profiles/base.nix
     ../../profiles/users/qhj.nix
+    ../../profiles/ssh-client.nix
     ../../profiles/desktop/plasma.nix
     ../../profiles/desktop/fonts.nix
     ../../profiles/desktop/fcitx5.nix
@@ -40,17 +41,5 @@
     age.keyFile = "/var/lib/sops-nix/key.txt";
   };
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
-  programs.ssh = {
-    startAgent = true;
-    extraConfig = ''
-      Host *
-        SetEnv TERM=xterm-256color
-      Host 192.168.77.1
-        ForwardAgent yes
-      Host github.com
-        Hostname ssh.github.com
-        Port 443
-    '';
-  };
   services.netbird.enable = true;
 }

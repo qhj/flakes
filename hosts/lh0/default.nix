@@ -3,6 +3,7 @@
     ./hardware-configuration.nix
     ../../profiles/base.nix
     ../../profiles/users/qhj.nix
+    ../../profiles/ssh-keys.nix
   ];
 
   system.stateVersion = "22.11";
@@ -19,13 +20,6 @@
       ClientAliveCountMax 10
     '';
   };
-
-  users.users.qhj.openssh.authorizedKeys.keys = [
-    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
-  ];
-  users.users.root.openssh.authorizedKeys.keys = [
-    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
-  ];
 
   # networking.firewall.allowedTCPPorts = [
   #   80
