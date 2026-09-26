@@ -17,6 +17,7 @@
     ../../profiles/desktop/plasma.nix
     ../../profiles/desktop/fonts.nix
     ../../profiles/desktop/fcitx5.nix
+    ../../profiles/desktop/ghostty.nix
     ../../profiles/lanzaboote.nix
     ../../profiles/desktop/niri
     (import ./dev-container.nix { inherit overlays maidModule; })
@@ -48,7 +49,6 @@
     # chiaki-ng
     # looking-glass-client
     mpv
-    ghostty
     obs-studio
     android-tools
     dig

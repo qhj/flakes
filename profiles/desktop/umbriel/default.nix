@@ -16,7 +16,6 @@
 
   environment.systemPackages = with pkgs; [
     adwaita-icon-theme
-    ghostty
     activate-linux
   ];
 }

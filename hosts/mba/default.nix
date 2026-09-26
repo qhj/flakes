@@ -21,6 +21,7 @@ in
     ../../profiles/ssh-client.nix
     ../../profiles/desktop/fonts.nix
     ../../profiles/desktop/fcitx5.nix
+    ../../profiles/desktop/ghostty.nix
     ../../profiles/desktop/umbriel
     ./maid.nix
   ];

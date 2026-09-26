@@ -14,6 +14,7 @@
     ../../profiles/desktop/plasma.nix
     ../../profiles/desktop/fonts.nix
     ../../profiles/desktop/fcitx5.nix
+    ../../profiles/desktop/ghostty.nix
     ../../profiles/lanzaboote.nix
     ../../profiles/desktop/niri
   ];
@@ -31,7 +32,6 @@
     telegram-desktop
     moonlight-qt
     wl-clipboard
-    ghostty
   ];
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   sops = {
