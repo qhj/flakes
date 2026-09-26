@@ -6,9 +6,6 @@
       directory = ../pkgs;
     };
   modifications = final: prev: {
-    helix = import ./helix.nix {
-      inherit final prev;
-    };
     sunshine = import ./sunshine.nix {
       inherit final prev;
     };

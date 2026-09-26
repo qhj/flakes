@@ -1,7 +1,10 @@
 { lib, pkgs, ... }:
 
 {
-  imports = [ ./fish ];
+  imports = [
+    ./fish
+    ./helix.nix
+  ];
 
   environment.systemPackages = [ pkgs.fastfetch ];
   environment.shellAliases.ff = "${pkgs.fastfetch}/bin/fastfetch";

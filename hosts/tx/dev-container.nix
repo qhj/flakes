@@ -1,4 +1,4 @@
-{ overlays }:
+{ overlays, maidModule }:
 { ... }:
 
 {
@@ -13,7 +13,9 @@
       {
         nixpkgs.overlays = overlays;
         imports = [
+          maidModule
           ../../profiles/fish
+          ../../profiles/helix.nix
         ];
         system.stateVersion = "26.11";
         boot.isNspawnContainer = true;
@@ -22,7 +24,6 @@
           "flakes"
         ];
         environment.systemPackages = with pkgs; [
-          helix
           git
           openvscode-server
         ];

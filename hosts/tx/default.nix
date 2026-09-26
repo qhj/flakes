@@ -3,6 +3,7 @@
   lib,
   config,
   overlays,
+  maidModule,
   ...
 }:
 
@@ -18,7 +19,7 @@
     ../../profiles/desktop/fcitx5.nix
     ../../profiles/lanzaboote.nix
     ../../profiles/desktop/niri
-    (import ./dev-container.nix { inherit overlays; })
+    (import ./dev-container.nix { inherit overlays maidModule; })
     ../../modules/sunshine.nix
     ./maid.nix
   ];
@@ -36,7 +37,6 @@
   ];
   environment.systemPackages = with pkgs; [
     neovim
-    helix
     file
     tree
     git

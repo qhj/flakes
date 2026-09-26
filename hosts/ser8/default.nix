@@ -27,7 +27,6 @@
     (lib.mkIf config.hardware.i2c.enable "i2c")
   ];
   environment.systemPackages = with pkgs; [
-    helix
     file
     telegram-desktop
     moonlight-qt

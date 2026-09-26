@@ -68,7 +68,6 @@
     config.systemd.services.netbird-client.serviceConfig.User
   ];
   environment.systemPackages = with pkgs; [
-    helix
     wol
     dig
   ];

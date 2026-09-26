@@ -92,6 +92,7 @@
           specialArgs = {
             inherit noctalia;
             overlays = systemOverlays;
+            maidModule = nix-maid.nixosModules.default;
           };
           modules = [
             ./hosts/tx
@@ -105,6 +106,7 @@
             ./hosts/gk41
             overlayModule
             sops-nix.nixosModules.sops
+            nix-maid.nixosModules.default
           ];
         };
         ser8 = nixpkgs.lib.nixosSystem {
@@ -122,6 +124,7 @@
             ./hosts/ms10
             overlayModule
             sops-nix.nixosModules.sops
+            nix-maid.nixosModules.default
           ];
         };
         lh0 = nixpkgs.lib.nixosSystem {
@@ -129,6 +132,7 @@
             ./hosts/lh0
             overlayModule
             sops-nix.nixosModules.sops
+            nix-maid.nixosModules.default
           ];
         };
       };

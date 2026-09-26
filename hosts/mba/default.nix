@@ -56,7 +56,6 @@ in
 
   networking.networkmanager.wifi.backend = "iwd";
   environment.systemPackages = with pkgs; [
-    helix
     telegram-desktop
   ];
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
