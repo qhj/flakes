@@ -1,7 +1,6 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 
@@ -11,12 +10,11 @@
   ];
   imports = [
     ./hardware-configuration.nix
+    ../../profiles/base.nix
+    ../../profiles/users/qhj.nix
     ../../modules/network-proxy
-    ../../modules/fish
     ./pppd.nix
   ];
-
-  qhj.fish.enable = true;
 
   system.stateVersion = "24.11";
 
@@ -65,15 +63,10 @@
     };
   };
 
-  users.groups.qhj.gid = 1000;
   users.users.qhj = {
-    isNormalUser = true;
-    group = "qhj";
     extraGroups = [
-      "wheel"
       config.systemd.services.netbird-client.serviceConfig.User
     ];
-    shell = lib.mkIf config.programs.fish.enable pkgs.fish;
     openssh.authorizedKeys.keys = [
       "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
     ];
@@ -166,14 +159,9 @@
   services.resolved.enable = false;
   systemd.tmpfiles.rules = [ "d /etc/dnsmasq.d 0755 root root -" ];
   nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
-  time.timeZone = "Asia/Shanghai";
   networking.firewall.allowedUDPPorts = [
     53
     67
-  ];
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
   ];
 
   networking.nftables = {

@@ -16,12 +16,11 @@ in
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/fish
+    ../../profiles/base.nix
+    ../../profiles/users/qhj.nix
     ../../modules/umbriel
     ./maid.nix
   ];
-
-  qhj.fish.enable = true;
 
   system.stateVersion = "26.11";
 
@@ -49,25 +48,10 @@ in
   boot.loader.efi.canTouchEfiVariables = false;
 
   networking.hostName = "mba";
-  time.timeZone = "Asia/Shanghai";
 
   programs.firefox.enable = true;
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
   networking.networkmanager.wifi.backend = "iwd";
-  programs.fish.enable = true;
-  users = {
-    groups.qhj.gid = 1000;
-    users.qhj = {
-      isNormalUser = true;
-      group = "qhj";
-      extraGroups = [ "wheel" ];
-      shell = pkgs.fish;
-    };
-  };
   environment.systemPackages = with pkgs; [
     helix
     fastfetch

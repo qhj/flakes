@@ -13,7 +13,7 @@
       {
         nixpkgs.overlays = overlays;
         imports = [
-          ../../modules/fish/default.nix
+          ../../profiles/fish
         ];
         system.stateVersion = "26.11";
         boot.isNspawnContainer = true;
@@ -26,7 +26,6 @@
           git
           openvscode-server
         ];
-        qhj.fish.enable = true;
         programs.ssh.startAgent = true;
         users = {
           groups.qhj.gid = 1000;

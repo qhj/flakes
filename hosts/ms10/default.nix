@@ -1,14 +1,10 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
+{ pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/fish
+    ../../profiles/base.nix
+    ../../profiles/users/qhj.nix
     ./postgresql.nix
     ./pocket-id.nix
     ./miniflux.nix
@@ -16,35 +12,17 @@
     ./cloudflared.nix
   ];
 
-  qhj.fish.enable = true;
-
   system.stateVersion = "22.11";
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/efi";
 
-  time.timeZone = "Asia/Shanghai";
-
   services.openssh.enable = true;
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
+  users.users.qhj.openssh.authorizedKeys.keys = [
+    "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
   ];
-
-  users = {
-    groups.qhj.gid = 1000;
-    users.qhj = {
-      isNormalUser = true;
-      group = "qhj";
-      extraGroups = [ "wheel" ];
-      shell = lib.mkIf config.programs.fish.enable pkgs.fish;
-      openssh.authorizedKeys.keys = [
-        "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
-      ];
-    };
-  };
   users.users.root.openssh.authorizedKeys.keys = [
     "sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIJLZ6a8qWKfuJHeFvLBuBAvIasbrBn1nNw50EYA/Hr0EAAAABHNzaDo="
   ];

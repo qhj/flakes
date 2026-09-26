@@ -9,15 +9,14 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ../../profiles/base.nix
+    ../../profiles/users/qhj.nix
     ../../modules/lanzaboote.nix
     ../../modules/niri
     (import ./dev-container.nix { inherit overlays; })
-    ../../modules/fish
     ../../modules/sunshine.nix
     ./maid.nix
   ];
-
-  qhj.fish.enable = true;
 
   system.stateVersion = "24.11";
 
@@ -29,25 +28,15 @@
 
   networking.hostName = "tx";
   networking.networkmanager.enable = true;
-  time.timeZone = "Asia/Shanghai";
   programs.firefox.enable = true;
   programs.firefox.preferences = {
     "browser.tabs.inTitlebar" = 0;
     "ui.key.menuAccessKeyFocuses" = false;
   };
-  users = {
-    groups.qhj.gid = 1000;
-    users.qhj = {
-      isNormalUser = true;
-      group = "qhj";
-      extraGroups = [
-        "wheel"
-        (lib.mkIf config.virtualisation.libvirtd.enable "libvirtd")
-        (lib.mkIf config.hardware.i2c.enable "i2c")
-      ];
-      shell = lib.mkIf config.programs.fish.enable pkgs.fish;
-    };
-  };
+  users.users.qhj.extraGroups = [
+    (lib.mkIf config.virtualisation.libvirtd.enable "libvirtd")
+    (lib.mkIf config.hardware.i2c.enable "i2c")
+  ];
   services.pipewire = {
     enable = true;
     pulse.enable = true;
@@ -113,10 +102,6 @@
     };
   };
   hardware.bluetooth.enable = true;
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
   nix.settings.substituters = [ "https://mirrors.cernet.edu.cn/nix-channels/store" ];
   hardware.graphics = {
     enable = true;
