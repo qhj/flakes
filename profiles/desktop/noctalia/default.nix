@@ -54,7 +54,6 @@
   environment.systemPackages = with pkgs; [
     ddcutil
     gpu-screen-recorder
-    playerctl
     kdePackages.plasma-integration
     kdePackages.breeze
     kdePackages.breeze-gtk

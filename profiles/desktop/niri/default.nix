@@ -56,7 +56,6 @@ in
   };
   environment.systemPackages = with pkgs; [
     xwayland-satellite
-    python3
     activate-linux
   ];
   hardware.i2c.enable = true;
