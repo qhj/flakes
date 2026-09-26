@@ -18,6 +18,7 @@
     ../../profiles/desktop/fonts.nix
     ../../profiles/desktop/fcitx5.nix
     ../../profiles/desktop/ghostty.nix
+    ../../profiles/desktop/vscodium.nix
     ../../profiles/lanzaboote.nix
     ../../profiles/desktop/niri
     (import ./dev-container.nix { inherit overlays maidModule; })
