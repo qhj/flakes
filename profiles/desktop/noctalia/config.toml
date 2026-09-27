@@ -5,7 +5,6 @@ center = [ "clock" ]
 end = [
     "group:g1",
     "tray",
-    "cat",
     "recorder",
     "clipboard",
     "network",
@@ -42,7 +41,7 @@ theme_mode_changed = "@sync-theme-mode@"
 address = "南沙区"
 
 [plugins]
-enabled = [ "noctalia/screen_recorder", "noctalia/mpvpaper", "dotnetrob/cat", "local/hostname" ]
+enabled = [ "noctalia/screen_recorder", "noctalia/mpvpaper", "local/hostname" ]
 
 [[plugins.source]]
 kind = "git"
@@ -92,9 +91,6 @@ shortcut = "6"
 [theme]
 builtin = "Nord"
 mode = "auto"
-
-[widget.cat]
-type = "dotnetrob/cat:cat"
 
 [widget.clock]
 format = "%F %T"
