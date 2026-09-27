@@ -2,6 +2,38 @@
   users.users.qhj.maid = {
     file.xdg_config."nvim".source = ../../pkgs/neovim/config/nvim;
 
+    file.xdg_config."noctalia/config.toml".text = ''
+      [include]
+      files = ["/etc/noctalia/config.toml"]
+
+      [[shell.session.actions]]
+      action = "lock"
+      shortcut = "1"
+
+      [[shell.session.actions]]
+      action = "logout"
+      shortcut = "2"
+
+      [[shell.session.actions]]
+      action = "lock_and_suspend"
+      shortcut = "3"
+
+      [[shell.session.actions]]
+      action = "reboot"
+      shortcut = "4"
+
+      [[shell.session.actions]]
+      action = "shutdown"
+      shortcut = "5"
+
+      [[shell.session.actions]]
+      action = "command"
+      label = "Windows"
+      glyph = "brand-windows"
+      command = "systemctl reboot --boot-loader-entry=auto-windows"
+      shortcut = "6"
+    '';
+
     file.xdg_config."MangoHud/MangoHud.conf".text = ''
       position=bottom-center
       horizontal

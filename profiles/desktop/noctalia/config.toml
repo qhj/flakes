@@ -57,33 +57,6 @@ name = "nixos-local"
 [shell.panel]
 open_near_click_control_center = true
 
-[[shell.session.actions]]
-action = "lock"
-shortcut = "1"
-
-[[shell.session.actions]]
-action = "logout"
-shortcut = "2"
-
-[[shell.session.actions]]
-action = "lock_and_suspend"
-shortcut = "3"
-
-[[shell.session.actions]]
-action = "reboot"
-shortcut = "4"
-
-[[shell.session.actions]]
-action = "shutdown"
-shortcut = "5"
-
-[[shell.session.actions]]
-action = "command"
-label = "Windows"
-glyph = "brand-windows"
-command = "systemctl reboot --boot-loader-entry=auto-windows"
-shortcut = "6"
-
 [theme]
 builtin = "Nord"
 mode = "auto"
