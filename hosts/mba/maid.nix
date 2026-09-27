@@ -3,6 +3,9 @@
     file.xdg_config."noctalia/config.toml".text = ''
       [include]
       files = ["/etc/noctalia/config.toml"]
+
+      [plugins]
+      enabled = ["noctalia/screen_recorder", "dotnetrob/cat", "local/hostname"]
     '';
 
     file.xdg_config."umbriel/config.toml".text = ''
