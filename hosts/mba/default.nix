@@ -21,6 +21,7 @@ in
     ../../profiles/ssh-client.nix
     ../../profiles/desktop/fonts.nix
     ../../profiles/desktop/fcitx5.nix
+    ../../profiles/desktop/firefox.nix
     ../../profiles/desktop/ghostty.nix
     ../../profiles/desktop/vscodium.nix
     ../../profiles/desktop/umbriel
@@ -53,8 +54,6 @@ in
   boot.loader.efi.canTouchEfiVariables = false;
 
   networking.hostName = "mba";
-
-  programs.firefox.enable = true;
 
   networking.networkmanager.wifi.backend = "iwd";
   environment.systemPackages = with pkgs; [
