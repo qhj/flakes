@@ -9,6 +9,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../profiles/base.nix
+    ../../profiles/nix-cache.nix
     ../../profiles/users/qhj.nix
     ../../profiles/ssh-client.nix
     ../../profiles/desktop/plasma.nix
@@ -35,7 +36,6 @@
     moonlight-qt
     wl-clipboard
   ];
-  nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   sops = {
     defaultSopsFile = ../../ser8.yaml;
     age.keyFile = "/var/lib/sops-nix/key.txt";

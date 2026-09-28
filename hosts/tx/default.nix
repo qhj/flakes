@@ -11,6 +11,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../profiles/base.nix
+    ../../profiles/nix-cache.nix
     ../../profiles/users/qhj.nix
     ../../profiles/ssh-client.nix
     ../../profiles/ssh-keys.nix
@@ -58,7 +59,6 @@
     mpvpaper
     waydroid-helper
   ];
-  nix.settings.substituters = [ "https://mirrors.cernet.edu.cn/nix-channels/store" ];
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [

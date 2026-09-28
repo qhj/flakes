@@ -14,6 +14,7 @@
         nixpkgs.overlays = overlays;
         imports = [
           maidModule
+          ../../profiles/nix-cache.nix
           ../../profiles/fish
           ../../profiles/helix.nix
         ];

@@ -11,6 +11,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../profiles/base.nix
+    ../../profiles/nix-cache.nix
     ../../profiles/users/qhj.nix
     ../../profiles/ssh-keys.nix
     ../../modules/network-proxy
@@ -149,7 +150,6 @@
   };
   services.resolved.enable = false;
   systemd.tmpfiles.rules = [ "d /etc/dnsmasq.d 0755 root root -" ];
-  nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   networking.firewall.allowedUDPPorts = [
     53
     67
