@@ -88,6 +88,10 @@
   sops.secrets."pppoe/password" = {
     mode = "0400";
   };
+  sops.secrets."sing-box/input-file" = {
+    sopsFile = ../../sing-box.yaml;
+    owner = config.systemd.services.sing-box.serviceConfig.User;
+  };
   sops.templates.pppoe-pap-secrets = {
     content = ''
       ${config.sops.placeholder."pppoe/username"} * ${config.sops.placeholder."pppoe/password"}
@@ -183,5 +187,8 @@
     dns-resolver.port = 5053;
     config.DisableDNS = true;
   };
-  qhj.network-proxy.enable = true;
+  qhj.network-proxy = {
+    enable = true;
+    inputFile = config.sops.secrets."sing-box/input-file".path;
+  };
 }

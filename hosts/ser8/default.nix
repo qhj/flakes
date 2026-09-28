@@ -12,6 +12,7 @@
     ../../profiles/nix-cache.nix
     ../../profiles/users/qhj.nix
     ../../profiles/ssh-client.nix
+    ../../profiles/pcsc.nix
     ../../profiles/desktop/plasma.nix
     ../../profiles/desktop/fonts.nix
     ../../profiles/desktop/fcitx5.nix

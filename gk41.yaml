@@ -1,8 +1,6 @@
 pppoe:
     username: ENC[AES256_GCM,data:4Wm5BjlqzmMfQ5Vxaqzx3TVzktbu,iv:LFloPYk8sNYuxX6tEpikVloN6X/4UTtHv+TqBQyKBbM=,tag:b0iNOym456yVGj/Tq0MwPA==,type:str]
     password: ENC[AES256_GCM,data:SRsIWgfpr6o=,iv:OnPh8VPBbUUdJSUuMy4PN3BlDscjh1r5zL+Eooh+RW8=,tag:mRz7vWTsTx6Z3gh8O1cHmA==,type:str]
-sing-box:
-    input-file: ENC[AES256_GCM,data:BMvUEUYJKTCAT8Xf1/pDLobZOWzv2g1FlPVU8Zvbmi7Fe8BsqlYtoSVOlfXTAdkefEfhhWwRzv/NplqXdioa+Vevj7Tm+m9VcqmGgJPuMDBpl6mRDGntWrvvqH9MFyC4/n6qurliWZMzsuewHgCFgpZaP5y/Du2a1QWQXohyaAm2J8haJjk5kQSvIIoUdweES0xLugCjFKFZTOCOvDf1iAGU41eXztP6,iv:N50HdfI27d20IWpOn0GYgb1ImQkcMaLejx2ChCuS4cY=,tag:wRRQ+HBJ04+JHSLusBYxbA==,type:str]
 sops:
     age:
         - enc: |
@@ -24,7 +22,7 @@ sops:
             PBnKKbbm201g1BnBpUMX2SIqkrtioopN+SQyHYNAvpW+wj7SRlz/uA==
             -----END AGE ENCRYPTED FILE-----
           recipient: age1xse2emp3plfccra6rqmfe4azqysfjpg55ltphxvwj62zc8yx7eqqvuua20
-    lastmodified: "2026-07-08T08:15:27Z"
-    mac: ENC[AES256_GCM,data:OOfiJYeOsljwRkWPLQB6w5oxDqpUBF8KDbX28Ak/7EmoMB4HbyEI4xm95g3W9hcasFAJ3r0C9pQEP1zwKN4g8bYyoLkZYXjnbYdR60tCXU5iaXFrqzvTkREkgHw5iIhlO4WaTOF5yF1e3LTwtoFMqVtNTL+jOIHfyWnMz8270qc=,iv:EbeMAfXaPNsAQPUIfSIqOOUXZX+xN/gvzf9DQMrys/A=,tag:dKpFU0a5EmG4bgM4la7q0Q==,type:str]
+    lastmodified: "2026-09-28T13:13:53Z"
+    mac: ENC[AES256_GCM,data:YnFC/ONZRZh6XOYCkW3y4C/n9ffhD4TAdAysq9CU6GIhx57lwpWV51IghPCyj8toL7aCmFl+5/iXzizxst9EXCPtd6HUtSojwWu7QyLV+VaiN8g47eNSns4F1Ts+y4xdjO0OCvgmZBVCOLc3n4jIkyvicdS3jgguWuLvZSnEtOo=,iv:BWy5QXdbx4dq5ID7aVOo9aWFecdZYMKvBt7VqkY8IEo=,tag:6LjMfVz5HPBfi0tjGU5Glg==,type:str]
     unencrypted_suffix: _unencrypted
-    version: 3.13.1
+    version: 3.13.3

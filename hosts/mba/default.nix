@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -20,12 +21,14 @@ in
     ../../profiles/nix-cache.nix
     ../../profiles/users/qhj.nix
     ../../profiles/ssh-client.nix
+    ../../profiles/pcsc.nix
     ../../profiles/desktop/fonts.nix
     ../../profiles/desktop/fcitx5.nix
     ../../profiles/desktop/firefox.nix
     ../../profiles/desktop/ghostty.nix
     ../../profiles/desktop/vscodium.nix
     ../../profiles/desktop/umbriel
+    ../../modules/network-proxy
     ./maid.nix
   ];
 
@@ -55,6 +58,21 @@ in
   boot.loader.efi.canTouchEfiVariables = false;
 
   networking.hostName = "mba";
+
+  sops = {
+    age.keyFile = "/var/lib/sops-nix/key.txt";
+  };
+
+  sops.secrets."sing-box/input-file" = {
+    sopsFile = ../../sing-box.yaml;
+    owner = config.systemd.services.sing-box.serviceConfig.User;
+  };
+
+  qhj.network-proxy = {
+    enable = true;
+    mode = "local";
+    inputFile = config.sops.secrets."sing-box/input-file".path;
+  };
 
   networking.networkmanager.wifi.backend = "iwd";
   environment.systemPackages = with pkgs; [

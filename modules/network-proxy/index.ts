@@ -29,7 +29,7 @@ function get(ip: string, hostname: string, pathname: string) {
 }
 
 const {
-  values: { 'input-file': inputFile, 'output-file': outputFile },
+  values: { 'input-file': inputFile, 'output-file': outputFile, mode = 'router' },
 } = parseArgs({
   args: process.argv.slice(2),
   options: {
@@ -41,12 +41,17 @@ const {
       type: 'string',
       short: 'o',
     },
+    mode: {
+      type: 'string',
+    },
   },
 })
 
-if (!inputFile || !outputFile) {
+if (!inputFile || !outputFile || (mode !== 'router' && mode !== 'local')) {
   process.exit(1)
 }
+
+const apiListen = mode === 'router' ? '192.168.77.1' : '127.0.0.1'
 
 const input = await readFile(inputFile, { encoding: 'utf8' })
 
@@ -332,7 +337,7 @@ const json = JSON.stringify({
   services: [
     {
       type: 'api',
-      listen: '192.168.77.1',
+      listen: apiListen,
       listen_port: 9090,
       dashboard: {
         enabled: true,
@@ -347,7 +352,7 @@ const json = JSON.stringify({
       store_dns: true,
     },
     clash_api: {
-      external_controller: '192.168.77.1:9091',
+      external_controller: `${apiListen}:9091`,
     },
   },
 })

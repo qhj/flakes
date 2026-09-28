@@ -85,6 +85,7 @@
             apple-silicon.nixosModules.default
             ./hosts/mba
             overlayModule
+            sops-nix.nixosModules.sops
             nix-maid.nixosModules.default
           ];
         };

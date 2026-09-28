@@ -14,6 +14,7 @@
     ../../profiles/nix-cache.nix
     ../../profiles/users/qhj.nix
     ../../profiles/ssh-client.nix
+    ../../profiles/pcsc.nix
     ../../profiles/ssh-keys.nix
     ../../profiles/desktop/plasma.nix
     ../../profiles/desktop/fonts.nix
@@ -176,7 +177,6 @@
   };
 
   qhj.sunshine.enable = true;
-  services.pcscd.enable = true;
 
   programs.steam = {
     enable = true;

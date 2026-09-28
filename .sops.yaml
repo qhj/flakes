@@ -4,6 +4,7 @@ keys:
   - &ser8_host age1m5hla0nhkl7han9acslvug6uev623cpjwffx0vef20f0gg50vceq2p58ma
   - &ms10_host age1t036a63tqvatlkh6jktyr8fhyp6rntpx4a6pwsgy829jza2zcg2qs26djg
   - &lh0_host age1ye5qdzz8ttvmjnvnjru074vs60nc05d93jrxz2asmtu8wx9n2v4q47nvry
+  - &mba_host age14yfsfex6qy07pcecjlcgk5pvmz6gu6kjnh2600qk9zk6qe2g6gzql6dmf8
 creation_rules:
   - path_regex: gk41\.yaml$
     key_groups:
@@ -20,3 +21,9 @@ creation_rules:
     - age:
       - *admin
       - *ms10_host
+  - path_regex: sing-box\.yaml$
+    key_groups:
+    - age:
+      - *admin
+      - *gk41_host
+      - *mba_host

@@ -8,6 +8,9 @@ pkgs.mkShellNoCC {
     bashInteractive
     fish
     git
+    age
+    age-plugin-yubikey
+    sops
     nixd
     nixfmt
     lua-language-server
