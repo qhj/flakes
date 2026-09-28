@@ -149,9 +149,6 @@
   services.udev.packages = with pkgs; [
     canokeys-udev-rules
   ];
-  programs.ssh.package = pkgs.openssh.override {
-    libfido2 = pkgs.libfido2HidOnly;
-  };
   networking.interfaces.enp9s0.wakeOnLan = {
     enable = true;
   };

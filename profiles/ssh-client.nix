@@ -1,5 +1,9 @@
+{ pkgs, ... }:
 {
   programs.ssh = {
+    package = pkgs.openssh.override {
+      libfido2 = pkgs.libfido2HidOnly;
+    };
     extraConfig = ''
       Host *
         SetEnv TERM=xterm-256color
