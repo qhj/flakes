@@ -54,6 +54,7 @@ in
 
   nixpkgs.config.allowUnfreePredicate = package: lib.getName package == "firmware.cpio";
 
+  boot.kernelParams = [ "hid_apple.fnmode=2" ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = false;
 
