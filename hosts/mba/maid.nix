@@ -16,6 +16,17 @@
       [include]
       files = ["/etc/umbriel/config.toml"]
 
+      [keybinds]
+      "XF86MonBrightnessDown" = "spawn:noctalia msg brightness-down"
+      "XF86MonBrightnessUp" = "spawn:noctalia msg brightness-up"
+      "XF86AudioMicMute" = { action = "spawn:noctalia msg mic-mute", repeat = false }
+      "XF86AudioPrev" = "spawn:noctalia msg media previous"
+      "XF86AudioPlay" = { action = "spawn:noctalia msg media toggle", repeat = false }
+      "XF86AudioNext" = "spawn:noctalia msg media next"
+      "XF86AudioMute" = { action = "spawn:noctalia msg volume-mute", repeat = false }
+      "XF86AudioLowerVolume" = "spawn:noctalia msg volume-down"
+      "XF86AudioRaiseVolume" = "spawn:noctalia msg volume-up"
+
       [output.eDP-1]
       scale = 1.777778
     '';
