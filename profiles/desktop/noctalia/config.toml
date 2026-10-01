@@ -55,6 +55,9 @@ kind = "path"
 location = "@noctalia-plugins-dir@"
 name = "nixos-local"
 
+[shell]
+polkit_agent = true
+
 [shell.panel]
 open_near_click_control_center = true
 
