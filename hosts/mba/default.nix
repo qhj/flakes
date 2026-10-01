@@ -28,7 +28,7 @@ in
     ../../profiles/desktop/ghostty.nix
     ../../profiles/desktop/vscodium.nix
     ../../profiles/desktop/umbriel
-    ../../modules/network-proxy
+    # ../../modules/network-proxy
     ./maid.nix
   ];
 
@@ -64,16 +64,16 @@ in
     age.keyFile = "/var/lib/sops-nix/key.txt";
   };
 
-  sops.secrets."sing-box/input-file" = {
-    sopsFile = ../../sing-box.yaml;
-    owner = config.systemd.services.sing-box.serviceConfig.User;
-  };
+  # sops.secrets."sing-box/input-file" = {
+  #   sopsFile = ../../sing-box.yaml;
+  #   owner = config.systemd.services.sing-box.serviceConfig.User;
+  # };
 
-  qhj.network-proxy = {
-    enable = true;
-    mode = "local";
-    inputFile = config.sops.secrets."sing-box/input-file".path;
-  };
+  # qhj.network-proxy = {
+  #   enable = true;
+  #   mode = "local";
+  #   inputFile = config.sops.secrets."sing-box/input-file".path;
+  # };
 
   networking.networkmanager.wifi.backend = "iwd";
   environment.systemPackages = with pkgs; [
@@ -93,4 +93,14 @@ in
     };
     settings.output.scale = 1.777778;
   };
+
+  services.netbird.clients.client = {
+    port = 51820;
+    name = "client";
+    interface = "wt0";
+    bin.suffix = "";
+  };
+  users.users.qhj.extraGroups = [
+    config.systemd.services.netbird-client.serviceConfig.User
+  ];
 }
