@@ -9,6 +9,7 @@ end = [
     "clipboard",
     "network",
     "bluetooth",
+    "input_volume",
     "volume",
     "brightness",
     "battery",
