@@ -94,6 +94,7 @@ in
     settings.output.scale = 1.777778;
   };
 
+  services.resolved.enable = true;
   services.netbird.clients.client = {
     port = 51820;
     name = "client";
