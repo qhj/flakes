@@ -1,11 +1,19 @@
 diff --git a/src/config/config.cpp b/src/config/config.cpp
 --- a/src/config/config.cpp
 +++ b/src/config/config.cpp
-@@ -2450,6 +2450,7 @@ namespace umbriel {
-         }
+@@ -5,6 +5,7 @@
+ #include "config/config_merge.h"
+ #include "config/config_registry.h"
+ #include "config/fields.h"
++#include "config/keybind_parse.h"
+ #include "config/section.h"
+ #include "config/store.h"
  
-         Config loaded;
-+        loaded.keybinds = defaultKeybinds();
-         {
-           Section root(result.merged, "", store.mutableDiagnostics());
-           readColors(root, loaded);
+@@ -94,6 +95,7 @@
+       }
+
+       Config loaded;
++      loaded.keybinds = defaultKeybinds();
+       std::vector<EffectReference> effectReferences;
+       {
+         Section root(result.merged, "", store.mutableDiagnostics());

@@ -17,7 +17,7 @@
     };
     nix-maid.url = "git+https://codeberg.org/viperML/nix-maid";
     apple-silicon = {
-      url = "github:nix-community/nixos-apple-silicon/release-2026-07-30";
+      url = "github:nix-community/nixos-apple-silicon";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     umbriel = {
