@@ -95,6 +95,13 @@ in
   };
 
   services.resolved.enable = true;
+  services.netbird.package = pkgs.netbird.overrideAttrs (oldAttrs: {
+    postPatch = (oldAttrs.postPatch or "") + ''
+      substituteInPlace client/grpc/dialer_generic.go \
+        --replace-fail 'if currentUser.Uid != "0" {' \
+          'if currentUser.Uid != "0" && !nbnet.AdvancedRouting() {'
+    '';
+  });
   services.netbird.clients.client = {
     port = 51820;
     name = "client";
