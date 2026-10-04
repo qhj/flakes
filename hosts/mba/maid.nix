@@ -6,10 +6,6 @@
 
       [plugins]
       enabled = ["noctalia/screen_recorder", "local/hostname"]
-
-      [[bar.default.capsule_group]]
-      id = "g1"
-      members = [ "network_rx", "network_tx" ]
     '';
 
     file.xdg_config."umbriel/config.toml".text = ''

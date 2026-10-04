@@ -1,9 +1,13 @@
 [bar.default]
 capsule_fill = "shadow"
 capsule_radius = 6
-center = [ "clock" ]
+center = []
 end = [
-    "group:g1",
+    # "cpu",
+    # "temp",
+    # "ram",
+    "network_rx",
+    "network_tx",
     "tray",
     "recorder",
     "clipboard",
@@ -15,17 +19,13 @@ end = [
     "battery",
     "theme_mode",
     "notifications",
-    "control-center"
+    "control-center",
+    "clock"
 ]
 margin_ends = 0
 radius = 0
 start = [ "launcher", "hostname", "wallpaper", "workspaces", "active_window", "media" ]
 widget_spacing = 12
-
-[[bar.default.capsule_group]]
-enabled = true
-id = "g1"
-members = [ "cpu", "temp", "ram", "network_rx", "network_tx" ]
 
 [brightness]
 enable_ddcutil = true
