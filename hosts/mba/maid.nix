@@ -1,5 +1,8 @@
-{ ... }: {
+{ config, ... }: {
   users.users.qhj.maid = {
+    file.xdg_config."autostart/netbird.desktop".source =
+      "${config.services.netbird.clients.client.wrapper}/share/applications/netbird.desktop";
+
     file.xdg_config."noctalia/config.toml".text = ''
       [include]
       files = ["/etc/noctalia/config.toml"]
