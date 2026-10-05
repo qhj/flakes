@@ -35,6 +35,7 @@ in
   system.stateVersion = "26.11";
 
   hardware.asahi.enable = true;
+  hardware.asahi.avd.vaapi-support = true;
   # /boot/m1n1/boot.bin is stage 2. CHAINLOADING builds are for stage 1
   # and skip the display power-cycle workaround needed with Sequoia system
   # firmware and older OS firmware (otherwise brightness only changes at 0%).
