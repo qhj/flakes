@@ -6,9 +6,6 @@
       directory = ../pkgs;
     };
   modifications = final: prev: {
-    sunshine = import ./sunshine.nix {
-      inherit final prev;
-    };
     libfido2HidOnly = import ./libfido2.nix {
       inherit prev;
     };
