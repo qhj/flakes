@@ -53,7 +53,19 @@
 
   environment.systemPackages = with pkgs; [
     virt-manager
+    syncthing
   ];
+
+  users.users.qhj = {
+    linger = true;
+    maid = {
+      systemd.packages = [ pkgs.syncthing ];
+      systemd.services.syncthing = {
+        wantedBy = [ "default.target" ];
+        environment.STGUIADDRESS = "http://0.0.0.0:8384";
+      };
+    };
+  };
 
   security.polkit.enable = true;
   virtualisation = {
@@ -99,5 +111,11 @@
   };
   networking.firewall.allowedTCPPorts = [
     80
+    8384
+    22000
+  ];
+  networking.firewall.allowedUDPPorts = [
+    21027
+    22000
   ];
 }

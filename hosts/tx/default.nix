@@ -59,6 +59,8 @@
     flameshot
     mpvpaper
     waydroid-helper
+    obsidian
+    syncthing
   ];
   hardware.graphics = {
     enable = true;
@@ -192,5 +194,14 @@
     builtins.elem (lib.getName pkg) [
       "steam"
       "steam-unwrapped"
+      "obsidian"
     ];
+
+  networking.firewall = {
+    allowedTCPPorts = [ 22000 ];
+    allowedUDPPorts = [
+      21027
+      22000
+    ];
+  };
 }

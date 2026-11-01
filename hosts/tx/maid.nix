@@ -1,5 +1,8 @@
-{ ... }: {
+{ pkgs, ... }: {
   users.users.qhj.maid = {
+    systemd.packages = [ pkgs.syncthing ];
+    systemd.services.syncthing.wantedBy = [ "default.target" ];
+
     file.xdg_config."nvim".source = ../../pkgs/neovim/config/nvim;
 
     file.xdg_config."noctalia/config.toml".text = ''
