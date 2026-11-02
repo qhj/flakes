@@ -10,10 +10,10 @@ autostart = [
 ]
 
 [keybinds]
-"Mod" = "spawn:noctalia msg panel-toggle launcher"
-"Mod+Alt+P" = "spawn:noctalia msg screenshot-region"
-"Mod+Ctrl+P" = "spawn:noctalia msg screenshot-fullscreen"
-"Mod+Return" = "spawn:ghostty"
+"Mod" = "spawn noctalia msg panel-toggle launcher"
+"Mod+Alt+P" = "spawn noctalia msg screenshot-region"
+"Mod+Ctrl+P" = "spawn noctalia msg screenshot-fullscreen"
+"Mod+Return" = "spawn ghostty"
 "Mod+F" = "window-toggle-maximize"
 "Mod+Shift+F" = "window-toggle-fullscreen"
 "Mod+Shift+Slash" = "cheatsheet-toggle"

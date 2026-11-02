@@ -1,6 +1,19 @@
 {
   description = "A very basic flake";
 
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://noctalia.cachix.org"
+      "https://umbriel.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+      "umbriel.cachix.org-1:JfNq/2yg2S6D6z4Z2dVSZrZlDPQTKtexB6GAVLD98nw="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
     lanzaboote = {
@@ -12,17 +25,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia = {
-      url = "github:noctalia-dev/noctalia";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:noctalia-dev/noctalia/cachix";
     };
     nix-maid.url = "git+https://codeberg.org/viperML/nix-maid";
     apple-silicon = {
       url = "github:nix-community/nixos-apple-silicon";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     umbriel = {
-      url = "github:noctalia-dev/umbriel";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:noctalia-dev/umbriel/cachix";
     };
   };
 
@@ -83,6 +93,18 @@
           specialArgs = { inherit noctalia umbriel; };
           modules = [
             apple-silicon.nixosModules.default
+            (
+              { lib, ... }:
+              {
+                hardware.asahi.pkgs = lib.mkForce (
+                  import apple-silicon.inputs.nixpkgs {
+                    localSystem.system = "aarch64-linux";
+                    crossSystem.system = "aarch64-linux";
+                    overlays = [ apple-silicon.overlays.default ];
+                  }
+                );
+              }
+            )
             ./hosts/mba
             overlayModule
             sops-nix.nixosModules.sops

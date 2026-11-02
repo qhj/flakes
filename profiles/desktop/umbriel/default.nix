@@ -7,9 +7,7 @@
 
   programs.umbriel = {
     enable = true;
-    package = umbriel.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
-      patches = (oldAttrs.patches or [ ]) ++ [ ./default-keybinds.patch ];
-    });
+    package = umbriel.packages.${pkgs.stdenv.hostPlatform.system}.default;
   };
 
   environment.etc."umbriel/config.toml".source = ./config.toml;

@@ -1,6 +1,5 @@
 {
   noctalia,
-  lib,
   pkgs,
   ...
 }:
@@ -71,20 +70,7 @@
 
   programs.noctalia = {
     enable = true;
-    package = noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: {
-      nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.wrapGAppsNoGuiHook ];
-      buildInputs = (oldAttrs.buildInputs or [ ]) ++ [ pkgs.gsettings-desktop-schemas ];
-      dontWrapGApps = true;
-      postFixup = ''
-        wrapProgram "$out/bin/noctalia" \
-          --prefix PATH : ${
-            lib.makeBinPath [
-              pkgs.git
-            ]
-          } \
-          "''${gappsWrapperArgs[@]}"
-      '';
-    });
+    package = noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
   };
   # Firefox treats the default theme asymmetrically: a Library window opened in
   # dark mode gets an explicit "dark" override, while one opened in light mode

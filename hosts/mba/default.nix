@@ -99,8 +99,8 @@ in
   services.netbird.package = pkgs.netbird.overrideAttrs (oldAttrs: {
     postPatch = (oldAttrs.postPatch or "") + ''
       substituteInPlace client/grpc/dialer_generic.go \
-        --replace-fail 'if currentUser.Uid != "0" {' \
-          'if currentUser.Uid != "0" && !nbnet.AdvancedRouting() {'
+        --replace-fail 'if runtime.GOOS == "linux" && os.Geteuid() != 0 {' \
+          'if runtime.GOOS == "linux" && os.Geteuid() != 0 && !nbnet.AdvancedRouting() {'
     '';
   });
   services.netbird.clients.client = {
