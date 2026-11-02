@@ -1,5 +1,8 @@
-{ config, ... }: {
+{ config, pkgs, ... }: {
   users.users.qhj.maid = {
+    systemd.packages = [ pkgs.syncthing ];
+    systemd.services.syncthing.wantedBy = [ "default.target" ];
+
     file.xdg_config."autostart/netbird.desktop".source =
       "${config.services.netbird.clients.client.wrapper}/share/applications/netbird.desktop";
 

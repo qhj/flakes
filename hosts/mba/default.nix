@@ -53,7 +53,12 @@ in
     }
   ];
 
-  nixpkgs.config.allowUnfreePredicate = package: lib.getName package == "firmware.cpio";
+  nixpkgs.config.allowUnfreePredicate =
+    package:
+    builtins.elem (lib.getName package) [
+      "firmware.cpio"
+      "obsidian"
+    ];
 
   boot.kernelParams = [ "hid_apple.fnmode=2" ];
   boot.loader.systemd-boot.enable = true;
@@ -79,7 +84,16 @@ in
   networking.networkmanager.wifi.backend = "iwd";
   environment.systemPackages = with pkgs; [
     telegram-desktop
+    obsidian
+    syncthing
   ];
+  networking.firewall = {
+    allowedTCPPorts = [ 22000 ];
+    allowedUDPPorts = [
+      21027
+      22000
+    ];
+  };
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
   services.udev.extraHwdb = ''
     evdev:name:Apple SPI Keyboard:*
