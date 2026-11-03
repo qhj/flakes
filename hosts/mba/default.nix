@@ -61,6 +61,7 @@
 
   networking.networkmanager.wifi.backend = "iwd";
   environment.systemPackages = with pkgs; [
+    kdePackages.dolphin
     telegram-desktop
     obsidian
     syncthing
