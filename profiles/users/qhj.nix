@@ -6,6 +6,8 @@
 }:
 
 {
+  nix.settings.trusted-users = [ "qhj" ];
+
   users.groups.qhj.gid = 1000;
   users.users.qhj = {
     isNormalUser = true;
