@@ -5,15 +5,6 @@
   ...
 }:
 
-let
-  firmware = pkgs.requireFile {
-    name = "firmware.cpio";
-    hash = "sha256-ReQiPDax4qL1jZKaiBK7eMvvm7esqqAwc9rZc87SO3Y=";
-    message = ''
-      nix-store --add-fixed sha256 /boot/vendorfw/firmware.cpio
-    '';
-  };
-in
 {
   imports = [
     ./hardware-configuration.nix
@@ -36,6 +27,7 @@ in
 
   hardware.asahi.enable = true;
   hardware.asahi.avd.vaapi-support = true;
+  hardware.asahi.peripheralFirmwareDirectory = null;
   # /boot/m1n1/boot.bin is stage 2. CHAINLOADING builds are for stage 1
   # and skip the display power-cycle workaround needed with Sequoia system
   # firmware and older OS firmware (otherwise brightness only changes at 0%).
@@ -46,19 +38,9 @@ in
       });
     })
   ];
-  hardware.asahi.peripheralFirmwareDirectory = pkgs.linkFarm "asahi-peripheral-firmware" [
-    {
-      name = "firmware.cpio";
-      path = firmware;
-    }
-  ];
-
   nixpkgs.config.allowUnfreePredicate =
     package:
-    builtins.elem (lib.getName package) [
-      "firmware.cpio"
-      "obsidian"
-    ];
+    builtins.elem (lib.getName package) [ "obsidian" ];
 
   boot.kernelParams = [ "hid_apple.fnmode=2" ];
   boot.loader.systemd-boot.enable = true;
