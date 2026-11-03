@@ -31,16 +31,12 @@
   # /boot/m1n1/boot.bin is stage 2. CHAINLOADING builds are for stage 1
   # and skip the display power-cycle workaround needed with Sequoia system
   # firmware and older OS firmware (otherwise brightness only changes at 0%).
-  nixpkgs.overlays = [
-    (_final: prev: {
-      m1n1 = prev.m1n1.overrideAttrs (oldAttrs: {
-        makeFlags = lib.remove "CHAINLOADING=1" oldAttrs.makeFlags;
-      });
-    })
-  ];
-  nixpkgs.config.allowUnfreePredicate =
-    package:
-    builtins.elem (lib.getName package) [ "obsidian" ];
+  # Override the boot package directly: Asahi uses a separate package set,
+  # so an overlay on the system's pkgs.m1n1 does not affect this binary.
+  boot.m1n1Package = config.hardware.asahi.pkgs.m1n1.overrideAttrs (oldAttrs: {
+    makeFlags = lib.remove "CHAINLOADING=1" oldAttrs.makeFlags;
+  });
+  nixpkgs.config.allowUnfreePredicate = package: builtins.elem (lib.getName package) [ "obsidian" ];
 
   boot.kernelParams = [ "hid_apple.fnmode=2" ];
   boot.loader.systemd-boot.enable = true;
