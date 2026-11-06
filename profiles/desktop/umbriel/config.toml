@@ -11,6 +11,7 @@ autostart = [
 
 [keybinds]
 "Mod" = "spawn noctalia msg panel-toggle launcher"
+"Mod+Alt+L" = "spawn noctalia msg session lock"
 "Mod+Alt+P" = "spawn noctalia msg screenshot-region"
 "Mod+Ctrl+P" = "spawn noctalia msg screenshot-fullscreen"
 "Mod+Return" = "spawn ghostty"
