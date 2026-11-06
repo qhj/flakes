@@ -44,6 +44,12 @@
 
   networking.hostName = "mba";
 
+  programs.ssh = {
+    startAgent = true;
+    enableAskPassword = true;
+    askPassword = "${pkgs.kdePackages.ksshaskpass}/bin/ksshaskpass";
+  };
+
   sops = {
     age.keyFile = "/var/lib/sops-nix/key.txt";
   };
