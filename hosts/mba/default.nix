@@ -74,6 +74,9 @@
     ];
   };
   services.udev.packages = with pkgs; [ canokeys-udev-rules ];
+  services.udev.extraRules = ''
+    SUBSYSTEM=="power_supply", KERNEL=="macsmc-battery", ATTR{charge_control_end_threshold}="80"
+  '';
   services.udev.extraHwdb = ''
     evdev:name:Apple SPI Keyboard:*
      KEYBOARD_KEY_70039=leftctrl
