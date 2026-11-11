@@ -45,6 +45,9 @@ pkgs.mkShellNoCC {
         "editor.codeActionsOnSave" = {
           "source.organizeImports.biome" = "explicit";
         };
+        "json.schemaDownload.trustedDomains" = {
+          "https://biomejs.dev" = true;
+        };
       };
     in
     ''
