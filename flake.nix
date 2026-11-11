@@ -53,14 +53,17 @@
         "x86_64-linux"
         "aarch64-linux"
       ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
-      pkgsFor = forAllSystems (
-        system:
-        import nixpkgs {
-          inherit system;
-          overlays = [ self.overlays.additions ];
-        }
-      );
+      forAllSystems =
+        f:
+        nixpkgs.lib.genAttrs systems (
+          system:
+          f system (
+            import nixpkgs {
+              inherit system;
+              overlays = [ self.overlays.additions ];
+            }
+          )
+        );
       systemOverlays = with self.overlays; [
         additions
         modifications
@@ -70,12 +73,11 @@
       };
     in
     {
-      formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
-      packages = forAllSystems (system: import ./packages.nix { pkgs = pkgsFor.${system}; });
+      formatter = forAllSystems (_: pkgs: pkgs.nixfmt-tree);
+      packages = forAllSystems (_: pkgs: import ./packages.nix { inherit pkgs; });
       devShells = forAllSystems (
-        system:
+        system: pkgs:
         let
-          pkgs = pkgsFor.${system};
           dev = import ./shells/dev.nix {
             inherit pkgs;
             repoRoot = self.packages.${system}.repo-root;
