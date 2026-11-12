@@ -71,6 +71,7 @@
     telegram-desktop
     obsidian
     syncthing
+    wl-clipboard
   ];
   networking.firewall = {
     allowedTCPPorts = [ 22000 ];
