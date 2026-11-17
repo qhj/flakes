@@ -6,7 +6,10 @@
     ./helix.nix
   ];
 
-  environment.systemPackages = [ pkgs.fastfetch ];
+  environment.systemPackages = [
+    pkgs.fastfetch
+    pkgs.rom
+  ];
   environment.shellAliases = {
     ff = "${pkgs.fastfetch}/bin/fastfetch";
     ls = "TIME_STYLE='+%F %T %:::z' ${pkgs.coreutils-full}/bin/ls --color=tty -F";

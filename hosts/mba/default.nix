@@ -27,7 +27,7 @@
 
   hardware.asahi.enable = true;
   hardware.asahi.avd.vaapi-support = true;
-  hardware.asahi.peripheralFirmwareDirectory = null;
+  hardware.asahi.avd.codecs = [ "all" ];
   # /boot/m1n1/boot.bin is stage 2. CHAINLOADING builds are for stage 1
   # and skip the display power-cycle workaround needed with Sequoia system
   # firmware and older OS firmware (otherwise brightness only changes at 0%).
@@ -72,6 +72,7 @@
     obsidian
     syncthing
     wl-clipboard
+    moonlight-qt
   ];
   networking.firewall = {
     allowedTCPPorts = [ 22000 ];
