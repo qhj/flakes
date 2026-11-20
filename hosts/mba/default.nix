@@ -74,6 +74,10 @@
     wl-clipboard
     moonlight-qt
   ];
+  services.dbus.packages = with pkgs.kdePackages; [
+    kio
+    kwallet
+  ];
   networking.firewall = {
     allowedTCPPorts = [ 22000 ];
     allowedUDPPorts = [
